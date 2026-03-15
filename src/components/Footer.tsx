@@ -8,7 +8,7 @@ export function Footer() {
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Gamepad2 className="h-4 w-4" />
           <span>
-            <strong className="text-foreground">GameChanger</strong> — Outil de
+            <strong className="text-foreground">GameChanger</strong> - Outil de
             recherche de jeux thérapeutiques
           </span>
         </div>

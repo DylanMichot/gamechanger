@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Search, Star, Shield, Users } from 'lucide-react'
+import { Search, Star, NotebookPen, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
@@ -17,7 +17,7 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium mb-8">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-              Outil gratuit pour les professionnels de santé
+              Outil gratuit du PEA Jeux de Société
             </div>
 
             <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight mb-6">
@@ -27,9 +27,9 @@ export default function HomePage() {
             </h1>
 
             <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl leading-relaxed">
-              GameChanger aide les psychomotriciens, ergothérapeutes et
+              Nous aidons les psychomotriciens, ergothérapeutes et
               psychologues à trouver des jeux de société adaptés aux besoins
-              spécifiques de leurs patients — par population ciblée, tranche
+              spécifiques de leurs patients - par population, tranche
               d'âge et objectif thérapeutique.
             </p>
 
@@ -65,7 +65,7 @@ export default function HomePage() {
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             GameChanger est conçu pour les professionnels de santé qui
-            souhaitent intégrer le jeu dans leur pratique clinique.
+            souhaitent intégrer les jeux de société dans leur pratique clinique.
           </p>
         </div>
 
@@ -78,10 +78,10 @@ export default function HomePage() {
                 'Trouvez des jeux travaillant la coordination, l\'équilibre, la motricité fine et les fonctions exécutives adaptés à chaque patient.',
             },
             {
-              icon: '🤲',
+              icon: '🧩',
               title: 'Ergothérapeutes',
               description:
-                'Sélectionnez des activités ludiques favorisant la réautonomisation, la motricité et la réadaptation après AVC ou traumatisme.',
+                'Sélectionnez des activités ludiques favorisant la réautonomisation, la motricité et la réadaptation quels que soient vos patients.',
             },
             {
               icon: '💬',
@@ -120,24 +120,24 @@ export default function HomePage() {
             {[
               {
                 number: '01',
-                icon: <Search className="h-6 w-6" />,
+                icon: <NotebookPen className="h-6 w-6" />,
                 title: 'Définissez vos critères',
                 description:
-                  'Nombre de patients, tranche d\'âge, pathologies ciblées et fonctions à travailler.',
+                  'Nombre de patients, tranche d\'âge, populations ciblées et fonctions à travailler.',
               },
               {
                 number: '02',
-                icon: <Star className="h-6 w-6" />,
+                icon: <Search className="h-6 w-6" />,
                 title: 'Parcourez les résultats',
                 description:
                   'Les jeux correspondant à vos critères s\'affichent avec leurs caractéristiques thérapeutiques.',
               },
               {
                 number: '03',
-                icon: <Shield className="h-6 w-6" />,
+                icon: <Star className="h-6 w-6" />,
                 title: 'Sauvegardez vos favoris',
                 description:
-                  'Enregistrez les jeux pertinents dans vos favoris pour les retrouver facilement lors de vos séances.',
+                  'Enregistrez les jeux pertinents dans vos favoris pour les retrouver facilement.',
               },
             ].map((step) => (
               <div key={step.number} className="flex gap-5">
@@ -169,8 +169,7 @@ export default function HomePage() {
             Prêt à enrichir votre pratique ?
           </h2>
           <p className="text-muted-foreground text-lg mb-8">
-            Accédez gratuitement à notre catalogue de jeux sélectionnés pour
-            la pratique clinique.
+            Accédez gratuitement à notre catalogue de jeux sélectionnés par nos soins.
           </p>
           <Button asChild size="lg" className="gap-2 text-base h-12 px-10">
             <Link href="/jeux">
