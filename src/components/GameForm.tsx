@@ -281,13 +281,13 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
             {imageError && <p className="text-sm text-destructive">{imageError}</p>}
           </div>
 
-          {/* Tags pathologies */}
+          {/* Tags populations */}
           <div className="space-y-2">
-            <Label>Tags pathologies</Label>
+            <Label>Tags populations</Label>
             <TagInput
               value={formData.pathologyTags}
               onChange={(tags) => setFormData((p) => ({ ...p, pathologyTags: tags }))}
-              placeholder="Ex : AVC, démence, dyslexie..."
+              placeholder="Ex : personnes âgées, TDAH, AVC..."
               variant="pathology"
               suggestions={existingPathologyTags}
             />

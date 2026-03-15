@@ -111,6 +111,8 @@ export function GameCard({ game, onTagClick }: GameCardProps) {
               <span>
                 {game.minAge === game.maxAge
                   ? `${game.minAge} ans`
+                  : game.maxAge >= 120
+                  ? `${game.minAge}+`
                   : `${game.minAge}–${game.maxAge} ans`}
               </span>
             </div>

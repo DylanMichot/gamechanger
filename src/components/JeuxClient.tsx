@@ -95,7 +95,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
     <div className="space-y-6">
       {/* Joueurs */}
       <div className="space-y-3">
-        <h3 className="font-semibold text-sm text-foreground">Nombre de patients</h3>
+        <h3 className="font-semibold text-sm text-foreground">Nombre de joueurs</h3>
         <div className="flex items-center gap-3">
           <input
             type="number"
@@ -173,7 +173,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
       {allPathologyTags.length > 0 && (
         <>
           <div className="space-y-3">
-            <h3 className="font-semibold text-sm text-foreground">Pathologies</h3>
+            <h3 className="font-semibold text-sm text-foreground">Populations</h3>
             {availablePathologyTags.length > 0 && (
               <select
                 value=""
@@ -187,7 +187,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
                 }}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <option value="">Ajouter une pathologie...</option>
+                <option value="">Ajouter une population...</option>
                 {availablePathologyTags.map((tag) => (
                   <option key={tag} value={tag}>{tag}</option>
                 ))}
@@ -311,7 +311,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
       {/* Mobile filters */}
       {mobileFiltersOpen && (
         <div className="lg:hidden mb-6 p-4 bg-white border rounded-xl shadow-sm">
-          <FilterPanel />
+          {FilterPanel()}
         </div>
       )}
 
@@ -334,7 +334,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
                 </button>
               )}
             </div>
-            <FilterPanel />
+            {FilterPanel()}
           </div>
         </aside>
 

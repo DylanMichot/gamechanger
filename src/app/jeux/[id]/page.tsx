@@ -84,6 +84,8 @@ export default async function GameDetailPage({ params }: PageProps) {
                 <p className="font-bold text-foreground mt-0.5">
                   {game.minAge === game.maxAge
                     ? `${game.minAge} ans`
+                    : game.maxAge >= 120
+                    ? `${game.minAge}+`
                     : `${game.minAge} – ${game.maxAge} ans`}
                 </p>
               </div>
@@ -107,7 +109,7 @@ export default async function GameDetailPage({ params }: PageProps) {
           {game.pathologyTags.length > 0 && (
             <div className="space-y-2">
               <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">
-                Pathologies ciblées
+                Populations ciblées
               </h2>
               <div className="flex flex-wrap gap-2">
                 {game.pathologyTags.map((tag) => (

@@ -29,8 +29,8 @@ export default function HomePage() {
             <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl leading-relaxed">
               GameChanger aide les psychomotriciens, ergothérapeutes et
               psychologues à trouver des jeux de société adaptés aux besoins
-              spécifiques de leurs patients — par pathologie, tranche d'âge et
-              objectif thérapeutique.
+              spécifiques de leurs patients — par population ciblée, tranche
+              d'âge et objectif thérapeutique.
             </p>
 
             <div className="flex flex-wrap gap-4">
