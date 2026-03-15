@@ -1,0 +1,366 @@
+'use client'
+
+import { useState, useMemo } from 'react'
+import { SlidersHorizontal, X, RotateCcw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Slider } from '@/components/ui/slider'
+import { Separator } from '@/components/ui/separator'
+import { GameCard } from '@/components/GameCard'
+import type { BoardGame } from '@/types'
+
+interface JeuxClientProps {
+  games: BoardGame[]
+  allPathologyTags: string[]
+  allPsychomotorTags: string[]
+}
+
+interface Filters {
+  players: number | null
+  ageRange: [number, number]
+  pathologyTags: string[]
+  psychomotorTags: string[]
+}
+
+const DEFAULT_FILTERS: Filters = {
+  players: null,
+  ageRange: [0, 120],
+  pathologyTags: [],
+  psychomotorTags: [],
+}
+
+export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: JeuxClientProps) {
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+
+  const filteredGames = useMemo(() => {
+    return games.filter((game) => {
+      if (filters.players !== null) {
+        if (game.minPlayers > filters.players || game.maxPlayers < filters.players) return false
+      }
+      const [filterAgeMin, filterAgeMax] = filters.ageRange
+      if (filterAgeMin !== 0 || filterAgeMax !== 120) {
+        if (game.maxAge < filterAgeMin || game.minAge > filterAgeMax) return false
+      }
+      if (filters.pathologyTags.length > 0) {
+        if (!filters.pathologyTags.some((tag) => game.pathologyTags.includes(tag))) return false
+      }
+      if (filters.psychomotorTags.length > 0) {
+        if (!filters.psychomotorTags.some((tag) => game.psychomotorTags.includes(tag))) return false
+      }
+      return true
+    })
+  }, [games, filters])
+
+  function resetFilters() {
+    setFilters(DEFAULT_FILTERS)
+  }
+
+  function handleTagClick(tag: string, type: 'pathology' | 'psychomotor') {
+    if (type === 'pathology') {
+      setFilters((prev) => ({
+        ...prev,
+        pathologyTags: prev.pathologyTags.includes(tag)
+          ? prev.pathologyTags
+          : [...prev.pathologyTags, tag],
+      }))
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        psychomotorTags: prev.psychomotorTags.includes(tag)
+          ? prev.psychomotorTags
+          : [...prev.psychomotorTags, tag],
+      }))
+    }
+  }
+
+  function removePathologyTag(tag: string) {
+    setFilters((prev) => ({ ...prev, pathologyTags: prev.pathologyTags.filter((t) => t !== tag) }))
+  }
+
+  function removePsychomotorTag(tag: string) {
+    setFilters((prev) => ({ ...prev, psychomotorTags: prev.psychomotorTags.filter((t) => t !== tag) }))
+  }
+
+  const hasActiveFilters =
+    filters.players !== null ||
+    filters.ageRange[0] !== 0 ||
+    filters.ageRange[1] !== 120 ||
+    filters.pathologyTags.length > 0 ||
+    filters.psychomotorTags.length > 0
+
+  const availablePathologyTags = allPathologyTags.filter((t) => !filters.pathologyTags.includes(t))
+  const availablePsychomotorTags = allPsychomotorTags.filter((t) => !filters.psychomotorTags.includes(t))
+
+  const FilterPanel = () => (
+    <div className="space-y-6">
+      {/* Joueurs */}
+      <div className="space-y-3">
+        <h3 className="font-semibold text-sm text-foreground">Nombre de patients</h3>
+        <div className="flex items-center gap-3">
+          <input
+            type="number"
+            min={1}
+            max={50}
+            value={filters.players ?? ''}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                players: e.target.value ? parseInt(e.target.value) : null,
+              }))
+            }
+            placeholder="Ex : 4"
+            className="flex h-9 w-24 rounded-md border border-input bg-background px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          />
+          {filters.players !== null && (
+            <button
+              onClick={() => setFilters((p) => ({ ...p, players: null }))}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Tranche d'âge */}
+      <div className="space-y-3">
+        <h3 className="font-semibold text-sm text-foreground">Tranche d'âge</h3>
+        <div className="px-1">
+          <Slider
+            min={0}
+            max={120}
+            step={1}
+            value={filters.ageRange}
+            onValueChange={(v) =>
+              setFilters((prev) => ({ ...prev, ageRange: v as [number, number] }))
+            }
+            className="w-full"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            min={0}
+            max={120}
+            value={filters.ageRange[0]}
+            onChange={(e) => {
+              const val = Math.min(Math.max(parseInt(e.target.value) || 0, 0), filters.ageRange[1])
+              setFilters((prev) => ({ ...prev, ageRange: [val, prev.ageRange[1]] }))
+            }}
+            className="w-16 text-center rounded-md border border-input bg-background px-2 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          />
+          <span className="text-muted-foreground text-sm">—</span>
+          <input
+            type="number"
+            min={0}
+            max={120}
+            value={filters.ageRange[1]}
+            onChange={(e) => {
+              const val = Math.min(Math.max(parseInt(e.target.value) || 0, filters.ageRange[0]), 120)
+              setFilters((prev) => ({ ...prev, ageRange: [prev.ageRange[0], val] }))
+            }}
+            className="w-16 text-center rounded-md border border-input bg-background px-2 py-1 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          />
+          <span className="text-xs text-muted-foreground">ans</span>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Pathologies - dropdown */}
+      {allPathologyTags.length > 0 && (
+        <>
+          <div className="space-y-3">
+            <h3 className="font-semibold text-sm text-foreground">Pathologies</h3>
+            {availablePathologyTags.length > 0 && (
+              <select
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setFilters((prev) => ({
+                      ...prev,
+                      pathologyTags: [...prev.pathologyTags, e.target.value],
+                    }))
+                  }
+                }}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="">Ajouter une pathologie...</option>
+                {availablePathologyTags.map((tag) => (
+                  <option key={tag} value={tag}>{tag}</option>
+                ))}
+              </select>
+            )}
+            {filters.pathologyTags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {filters.pathologyTags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-800 px-2.5 py-0.5 text-xs font-semibold"
+                  >
+                    {tag}
+                    <button
+                      onClick={() => removePathologyTag(tag)}
+                      className="hover:opacity-70"
+                      aria-label={`Retirer ${tag}`}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <Separator />
+        </>
+      )}
+
+      {/* Psychomoteur - dropdown */}
+      {allPsychomotorTags.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="font-semibold text-sm text-foreground">Fonctions psychomotrices</h3>
+          {availablePsychomotorTags.length > 0 && (
+            <select
+              value=""
+              onChange={(e) => {
+                if (e.target.value) {
+                  setFilters((prev) => ({
+                    ...prev,
+                    psychomotorTags: [...prev.psychomotorTags, e.target.value],
+                  }))
+                }
+              }}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">Ajouter une fonction...</option>
+              {availablePsychomotorTags.map((tag) => (
+                <option key={tag} value={tag}>{tag}</option>
+              ))}
+            </select>
+          )}
+          {filters.psychomotorTags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {filters.psychomotorTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1 rounded-full bg-teal-100 text-teal-800 px-2.5 py-0.5 text-xs font-semibold"
+                >
+                  {tag}
+                  <button
+                    onClick={() => removePsychomotorTag(tag)}
+                    className="hover:opacity-70"
+                    aria-label={`Retirer ${tag}`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+
+  return (
+    <div className="container py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Catalogue de jeux</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            {filteredGames.length} jeu{filteredGames.length !== 1 ? 'x' : ''} trouvé
+            {filteredGames.length !== 1 ? 's' : ''}
+            {games.length !== filteredGames.length && ` sur ${games.length}`}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={resetFilters}
+              className="gap-1.5 text-muted-foreground"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Réinitialiser
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="lg:hidden gap-2"
+            onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Filtres
+            {hasActiveFilters && (
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
+                {(filters.players !== null ? 1 : 0) +
+                  filters.pathologyTags.length +
+                  filters.psychomotorTags.length +
+                  (filters.ageRange[0] !== 0 || filters.ageRange[1] !== 120 ? 1 : 0)}
+              </span>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Mobile filters */}
+      {mobileFiltersOpen && (
+        <div className="lg:hidden mb-6 p-4 bg-white border rounded-xl shadow-sm">
+          <FilterPanel />
+        </div>
+      )}
+
+      <div className="flex gap-8">
+        {/* Sidebar desktop */}
+        <aside className="hidden lg:block w-64 shrink-0">
+          <div className="sticky top-24 bg-white border rounded-xl p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-foreground flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4" />
+                Filtres
+              </h2>
+              {hasActiveFilters && (
+                <button
+                  onClick={resetFilters}
+                  className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                >
+                  <RotateCcw className="h-3 w-3" />
+                  Réinitialiser
+                </button>
+              )}
+            </div>
+            <FilterPanel />
+          </div>
+        </aside>
+
+        {/* Game grid */}
+        <main className="flex-1">
+          {filteredGames.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="text-5xl mb-4">🎲</div>
+              <h3 className="text-lg font-semibold mb-2">Aucun jeu trouvé</h3>
+              <p className="text-muted-foreground text-sm max-w-xs">
+                Essayez de modifier vos filtres pour trouver des jeux adaptés à vos besoins.
+              </p>
+              <Button variant="outline" size="sm" onClick={resetFilters} className="mt-4 gap-2">
+                <RotateCcw className="h-3.5 w-3.5" />
+                Réinitialiser les filtres
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+              {filteredGames.map((game) => (
+                <GameCard key={game.id} game={game} onTagClick={handleTagClick} />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \":*)",
+      "Bash(npx tsc:*)",
+      "Bash(ls \"c:/Users/User/Documents/GameChanger/gamechanger/src/app/admin/\\(protected\\)/modifier/\")",
+      "Bash(ls \"c:/Users/User/Documents/GameChanger/gamechanger/src/app/admin/\\(protected\\)/modifier/[id]/\")",
+      "Bash(gh auth:*)"
+    ]
+  }
+}
