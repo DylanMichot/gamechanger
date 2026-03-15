@@ -42,10 +42,10 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
         if (game.maxAge < filterAgeMin || game.minAge > filterAgeMax) return false
       }
       if (filters.pathologyTags.length > 0) {
-        if (!filters.pathologyTags.some((tag) => game.pathologyTags.includes(tag))) return false
+        if (!filters.pathologyTags.every((tag) => game.pathologyTags.includes(tag))) return false
       }
       if (filters.psychomotorTags.length > 0) {
-        if (!filters.psychomotorTags.some((tag) => game.psychomotorTags.includes(tag))) return false
+        if (!filters.psychomotorTags.every((tag) => game.psychomotorTags.includes(tag))) return false
       }
       return true
     })
