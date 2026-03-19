@@ -51,30 +51,8 @@ export function GameCard({ game, onTagClick }: GameCardProps) {
             </p>
           </div>
 
-          {/* Tags */}
+          {/* Tags — fonctions en premier, puis populations */}
           <div className="flex flex-wrap gap-1.5">
-            {game.pathologyTags.slice(0, 3).map((tag) =>
-              onTagClick ? (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onTagClick(tag, 'pathology')
-                  }}
-                  title={`Filtrer par "${tag}"`}
-                >
-                  <Badge variant="pathology" className="text-xs cursor-pointer hover:opacity-75 transition-opacity">
-                    {tag}
-                  </Badge>
-                </button>
-              ) : (
-                <Badge key={tag} variant="pathology" className="text-xs">
-                  {tag}
-                </Badge>
-              )
-            )}
             {game.psychomotorTags.slice(0, 2).map((tag) =>
               onTagClick ? (
                 <button
@@ -97,6 +75,28 @@ export function GameCard({ game, onTagClick }: GameCardProps) {
                 </Badge>
               )
             )}
+            {game.pathologyTags.slice(0, 3).map((tag) =>
+              onTagClick ? (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onTagClick(tag, 'pathology')
+                  }}
+                  title={`Filtrer par "${tag}"`}
+                >
+                  <Badge variant="pathology" className="text-xs cursor-pointer hover:opacity-75 transition-opacity">
+                    {tag}
+                  </Badge>
+                </button>
+              ) : (
+                <Badge key={tag} variant="pathology" className="text-xs">
+                  {tag}
+                </Badge>
+              )
+            )}
             {game.pathologyTags.length + game.psychomotorTags.length > 5 && (
               <Badge variant="outline" className="text-xs text-muted-foreground">
                 +{game.pathologyTags.length + game.psychomotorTags.length - 5}
@@ -112,7 +112,7 @@ export function GameCard({ game, onTagClick }: GameCardProps) {
                 {game.minAge === game.maxAge
                   ? `${game.minAge} ans`
                   : game.maxAge >= 120
-                  ? `${game.minAge}+`
+                  ? `${game.minAge}+ ans`
                   : `${game.minAge}–${game.maxAge} ans`}
               </span>
             </div>

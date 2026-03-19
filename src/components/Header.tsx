@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Gamepad2, BookMarked, Search } from 'lucide-react'
+import { Dices, BookMarked, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
@@ -20,7 +20,7 @@ export function Header() {
           className="flex items-center gap-2 font-bold text-xl text-primary"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Gamepad2 className="h-5 w-5 text-white" />
+            <Dices className="h-5 w-5 text-white" />
           </div>
           <span>GameChanger</span>
         </Link>

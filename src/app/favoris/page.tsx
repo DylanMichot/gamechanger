@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookMarked, ArrowLeft } from 'lucide-react'
+import { BookMarked, ArrowLeft, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { GameCard } from '@/components/GameCard'
 import { getFavoriteIds } from '@/components/FavoriteButton'
@@ -48,16 +48,29 @@ export default function FavorisPage() {
         </Link>
       </Button>
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-foreground flex items-center gap-3">
-          <BookMarked className="h-7 w-7 text-accent" />
-          Mes favoris
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          {favoriteIds.length === 0
-            ? 'Aucun jeu sauvegardé pour le moment.'
-            : `${games.length} jeu${games.length !== 1 ? 'x' : ''} sauvegardé${games.length !== 1 ? 's' : ''}`}
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-foreground flex items-center gap-3">
+            <BookMarked className="h-7 w-7 text-accent" />
+            Mes favoris
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            {favoriteIds.length === 0
+              ? 'Aucun jeu sauvegardé pour le moment.'
+              : `${games.length} jeu${games.length !== 1 ? 'x' : ''} sauvegardé${games.length !== 1 ? 's' : ''}`}
+          </p>
+        </div>
+        {games.length > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 shrink-0 print:hidden"
+            onClick={() => window.print()}
+          >
+            <Printer className="h-4 w-4" />
+            Imprimer / PDF
+          </Button>
+        )}
       </div>
 
       {loading ? (

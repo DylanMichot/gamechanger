@@ -11,13 +11,10 @@ export const metadata: Metadata = {
 
 export default async function AjouterPage() {
   const games = await prisma.boardGame.findMany({
-    select: { pathologyTags: true, psychomotorTags: true },
+    select: { pathologyTags: true },
   })
 
   const existingPathologyTags = Array.from(new Set(games.flatMap((g) => g.pathologyTags))).sort((a, b) =>
-    a.localeCompare(b, 'fr')
-  )
-  const existingPsychomotorTags = Array.from(new Set(games.flatMap((g) => g.psychomotorTags))).sort((a, b) =>
     a.localeCompare(b, 'fr')
   )
 
@@ -40,7 +37,6 @@ export default async function AjouterPage() {
         <GameForm
           mode="create"
           existingPathologyTags={existingPathologyTags}
-          existingPsychomotorTags={existingPsychomotorTags}
         />
       </div>
     </div>

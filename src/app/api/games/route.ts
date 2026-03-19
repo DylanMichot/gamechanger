@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
       maxPlayers,
       pathologyTags,
       psychomotorTags,
+      addedBy,
     } = body
 
     // Validation
@@ -94,6 +95,7 @@ export async function POST(request: NextRequest) {
         maxPlayers,
         pathologyTags: pathologyTags ?? [],
         psychomotorTags: psychomotorTags ?? [],
+        addedBy: addedBy ?? null,
       },
     })
 

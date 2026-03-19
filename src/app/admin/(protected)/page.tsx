@@ -23,6 +23,22 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic'
 
+function formatAge(minAge: number, maxAge: number) {
+  if (minAge === maxAge) return `${minAge} ans`
+  if (maxAge >= 120) return `${minAge}+ ans`
+  return `${minAge}–${maxAge} ans`
+}
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date)
+}
+
 export default async function AdminPage() {
   const [games, session] = await Promise.all([
     prisma.boardGame.findMany({ orderBy: { createdAt: 'desc' } }),
@@ -69,8 +85,8 @@ export default async function AdminPage() {
               <TableRow className="bg-muted/30">
                 <TableHead className="w-16">Image</TableHead>
                 <TableHead>Nom</TableHead>
-                <TableHead className="hidden md:table-cell">Pathologies</TableHead>
-                <TableHead className="hidden lg:table-cell">Fonctions</TableHead>
+                <TableHead className="hidden md:table-cell">Fonctions</TableHead>
+                <TableHead className="hidden md:table-cell">Populations</TableHead>
                 <TableHead className="hidden sm:table-cell">Âge</TableHead>
                 <TableHead className="hidden sm:table-cell">Joueurs</TableHead>
                 <TableHead className="w-24 text-right">Actions</TableHead>
@@ -97,6 +113,24 @@ export default async function AdminPage() {
                   <TableCell>
                     <span className="font-semibold text-foreground line-clamp-1">{game.name}</span>
                     <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{game.description}</p>
+                    {game.addedBy && (
+                      <p className="text-xs text-muted-foreground/70 mt-0.5">
+                        Ajouté par {game.addedBy} · {formatDate(game.createdAt)}
+                      </p>
+                    )}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    <div className="flex flex-wrap gap-1 max-w-[200px]">
+                      {game.psychomotorTags.slice(0, 2).map((tag) => (
+                        <Badge key={tag} variant="psychomotor" className="text-xs">{tag}</Badge>
+                      ))}
+                      {game.psychomotorTags.length > 2 && (
+                        <Badge variant="outline" className="text-xs">+{game.psychomotorTags.length - 2}</Badge>
+                      )}
+                      {game.psychomotorTags.length === 0 && (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     <div className="flex flex-wrap gap-1 max-w-[200px]">
@@ -111,21 +145,8 @@ export default async function AdminPage() {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="hidden lg:table-cell">
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
-                      {game.psychomotorTags.slice(0, 2).map((tag) => (
-                        <Badge key={tag} variant="psychomotor" className="text-xs">{tag}</Badge>
-                      ))}
-                      {game.psychomotorTags.length > 2 && (
-                        <Badge variant="outline" className="text-xs">+{game.psychomotorTags.length - 2}</Badge>
-                      )}
-                      {game.psychomotorTags.length === 0 && (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
-                    </div>
-                  </TableCell>
                   <TableCell className="hidden sm:table-cell text-sm text-muted-foreground whitespace-nowrap">
-                    {game.minAge === game.maxAge ? `${game.minAge} ans` : `${game.minAge}–${game.maxAge} ans`}
+                    {formatAge(game.minAge, game.maxAge)}
                   </TableCell>
                   <TableCell className="hidden sm:table-cell text-sm text-muted-foreground whitespace-nowrap">
                     {game.minPlayers === game.maxPlayers ? `${game.minPlayers}` : `${game.minPlayers}–${game.maxPlayers}`}

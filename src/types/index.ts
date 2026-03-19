@@ -9,6 +9,7 @@ export interface BoardGame {
   maxPlayers: number
   pathologyTags: string[]
   psychomotorTags: string[]
+  addedBy?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -23,6 +24,7 @@ export interface BoardGameFormData {
   maxPlayers: number
   pathologyTags: string[]
   psychomotorTags: string[]
+  addedBy?: string
 }
 
 export interface GameFilters {

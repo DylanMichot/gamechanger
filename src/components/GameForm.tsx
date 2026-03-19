@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Upload, X, Loader2 } from 'lucide-react'
@@ -10,38 +10,20 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { TagInput } from '@/components/TagInput'
+import { MEMBRES_EQUIPE, FONCTIONS_PSYCHOMOTRICES } from '@/lib/constants'
 import type { BoardGame, BoardGameFormData } from '@/types'
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024
-
-// Liste officielle des fonctions — modifier ici pour en ajouter ou en retirer
-export const FONCTIONS_PSYCHOMOTRICES = [
-  'temps',
-  'espace',
-  'schéma corporel',
-  'motricité fine',
-  'motricité globale',
-  'graphomotricité',
-  'tonus',
-  'praxies',
-  'coordination',
-  'coordinations oculo-manuelles',
-  'attention',
-  'planification',
-  'inhibition',
-  'mémoire de travail',
-  'flexibilité mentale',
-]
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
+const LAST_MEMBER_KEY = 'gc_last_member'
 
 interface GameFormProps {
   initialData?: BoardGame
   mode: 'create' | 'edit'
   existingPathologyTags?: string[]
-  existingPsychomotorTags?: string[]
 }
 
-export function GameForm({ initialData, mode, existingPathologyTags = [], existingPsychomotorTags = [] }: GameFormProps) {
+export function GameForm({ initialData, mode, existingPathologyTags = [] }: GameFormProps) {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -55,6 +37,7 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
     maxPlayers: initialData?.maxPlayers ?? 6,
     pathologyTags: initialData?.pathologyTags ?? [],
     psychomotorTags: initialData?.psychomotorTags ?? [],
+    addedBy: initialData?.addedBy ?? '',
   })
 
   const [imageFile, setImageFile] = useState<File | null>(null)
@@ -63,6 +46,14 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
   const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string>('')
+
+  // Pre-fill member from localStorage on create
+  useEffect(() => {
+    if (mode === 'create' && !formData.addedBy) {
+      const last = localStorage.getItem(LAST_MEMBER_KEY)
+      if (last) setFormData((p) => ({ ...p, addedBy: last }))
+    }
+  }, [mode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const ageError = formData.minAge > formData.maxAge
     ? "L'âge minimum ne peut pas dépasser l'âge maximum"
@@ -122,6 +113,11 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
     if (!imagePreview) { setError('Une image est requise'); return }
     if (ageError) { setError(ageError); return }
     if (playersError) { setError(playersError); return }
+
+    // Save last member to localStorage
+    if (formData.addedBy) {
+      localStorage.setItem(LAST_MEMBER_KEY, formData.addedBy)
+    }
 
     setIsSubmitting(true)
     try {
@@ -186,7 +182,7 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
               id="description"
               value={formData.description}
               onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))}
-              placeholder="Description courte du jeu et de ses caractéristiques thérapeutiques..."
+              placeholder="Description courte du jeu et de ses caractéristiques..."
               rows={4}
               required
             />
@@ -209,7 +205,7 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="maxAge" className="text-xs text-muted-foreground">Âge maximum</Label>
+                <Label htmlFor="maxAge" className="text-xs text-muted-foreground">Âge maximum (120 = illimité)</Label>
                 <Input
                   id="maxAge"
                   type="number"
@@ -254,6 +250,22 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
               </div>
             </div>
             {playersError && <p className="text-xs text-destructive">{playersError}</p>}
+          </div>
+
+          {/* Ajouté par */}
+          <div className="space-y-2">
+            <Label htmlFor="addedBy">Ajouté par</Label>
+            <select
+              id="addedBy"
+              value={formData.addedBy ?? ''}
+              onChange={(e) => setFormData((p) => ({ ...p, addedBy: e.target.value }))}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">— Sélectionner un membre —</option>
+              {MEMBRES_EQUIPE.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -300,27 +312,28 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
             {imageError && <p className="text-sm text-destructive">{imageError}</p>}
           </div>
 
-          {/* Tags populations */}
-          <div className="space-y-2">
-            <Label>Tags populations</Label>
-            <TagInput
-              value={formData.pathologyTags}
-              onChange={(tags) => setFormData((p) => ({ ...p, pathologyTags: tags }))}
-              placeholder="Ex : personnes âgées, TDAH, AVC..."
-              variant="pathology"
-              suggestions={existingPathologyTags}
-            />
-          </div>
-
           {/* Tags fonctions */}
           <div className="space-y-2">
             <Label>Fonctions</Label>
             <TagInput
               value={formData.psychomotorTags}
               onChange={(tags) => setFormData((p) => ({ ...p, psychomotorTags: tags }))}
-              placeholder="Ex : coordination, attention, praxies..."
+              placeholder="Cliquer pour voir les fonctions disponibles..."
               variant="psychomotor"
               suggestions={FONCTIONS_PSYCHOMOTRICES}
+              showAllOnFocus={true}
+            />
+          </div>
+
+          {/* Tags populations */}
+          <div className="space-y-2">
+            <Label>Populations</Label>
+            <TagInput
+              value={formData.pathologyTags}
+              onChange={(tags) => setFormData((p) => ({ ...p, pathologyTags: tags }))}
+              placeholder="Ex : personnes âgées, TDAH, enfants..."
+              variant="pathology"
+              suggestions={existingPathologyTags}
             />
           </div>
         </div>

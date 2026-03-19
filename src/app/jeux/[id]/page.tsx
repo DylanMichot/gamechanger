@@ -10,6 +10,7 @@ import { prisma } from '@/lib/prisma'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { FavoriteButton } from '@/components/FavoriteButton'
+import { CopyLinkButton } from '@/components/CopyLinkButton'
 
 interface PageProps {
   params: { id: string }
@@ -66,7 +67,10 @@ export default async function GameDetailPage({ params }: PageProps) {
             <h1 className="text-3xl font-extrabold text-foreground leading-tight">
               {game.name}
             </h1>
-            <FavoriteButton gameId={game.id} />
+            <div className="flex items-center gap-2 shrink-0">
+              <CopyLinkButton />
+              <FavoriteButton gameId={game.id} />
+            </div>
           </div>
 
           <p className="text-muted-foreground text-base leading-relaxed">
@@ -105,23 +109,7 @@ export default async function GameDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Tags pathologies */}
-          {game.pathologyTags.length > 0 && (
-            <div className="space-y-2">
-              <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">
-                Populations ciblées
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {game.pathologyTags.map((tag) => (
-                  <Badge key={tag} variant="pathology">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Tags psychomoteurs */}
+          {/* Tags fonctions — en premier */}
           {game.psychomotorTags.length > 0 && (
             <div className="space-y-2">
               <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">
@@ -130,6 +118,22 @@ export default async function GameDetailPage({ params }: PageProps) {
               <div className="flex flex-wrap gap-2">
                 {game.psychomotorTags.map((tag) => (
                   <Badge key={tag} variant="psychomotor">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Tags populations */}
+          {game.pathologyTags.length > 0 && (
+            <div className="space-y-2">
+              <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">
+                Populations ciblées
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {game.pathologyTags.map((tag) => (
+                  <Badge key={tag} variant="pathology">
                     {tag}
                   </Badge>
                 ))}

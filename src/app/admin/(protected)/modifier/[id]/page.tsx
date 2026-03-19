@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default async function ModifierPage({ params }: PageProps) {
   const [gameRaw, allGames] = await Promise.all([
     prisma.boardGame.findUnique({ where: { id: params.id } }),
-    prisma.boardGame.findMany({ select: { pathologyTags: true, psychomotorTags: true } }),
+    prisma.boardGame.findMany({ select: { pathologyTags: true } }),
   ])
 
   if (!gameRaw) notFound()
@@ -30,9 +30,6 @@ export default async function ModifierPage({ params }: PageProps) {
   }
 
   const existingPathologyTags = Array.from(new Set(allGames.flatMap((g) => g.pathologyTags))).sort((a, b) =>
-    a.localeCompare(b, 'fr')
-  )
-  const existingPsychomotorTags = Array.from(new Set(allGames.flatMap((g) => g.psychomotorTags))).sort((a, b) =>
     a.localeCompare(b, 'fr')
   )
 
@@ -56,7 +53,6 @@ export default async function ModifierPage({ params }: PageProps) {
           mode="edit"
           initialData={game}
           existingPathologyTags={existingPathologyTags}
-          existingPsychomotorTags={existingPsychomotorTags}
         />
       </div>
     </div>

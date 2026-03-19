@@ -27,7 +27,7 @@ export async function PUT(
     if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
     const body = await request.json()
-    const { name, description, imageUrl, minAge, maxAge, minPlayers, maxPlayers, pathologyTags, psychomotorTags, oldImageUrl } = body
+    const { name, description, imageUrl, minAge, maxAge, minPlayers, maxPlayers, pathologyTags, psychomotorTags, addedBy, oldImageUrl } = body
 
     if (!name?.trim()) return NextResponse.json({ error: 'Le nom est requis' }, { status: 400 })
     if (!description?.trim()) return NextResponse.json({ error: 'La description est requise' }, { status: 400 })
@@ -57,6 +57,7 @@ export async function PUT(
         maxPlayers,
         pathologyTags: pathologyTags ?? [],
         psychomotorTags: psychomotorTags ?? [],
+        addedBy: addedBy ?? null,
       },
     })
 

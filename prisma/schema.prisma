@@ -19,6 +19,7 @@ model BoardGame {
   maxPlayers      Int
   pathologyTags   String[]
   psychomotorTags String[]
+  addedBy         String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

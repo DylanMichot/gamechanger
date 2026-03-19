@@ -64,17 +64,13 @@ export default function HomePage() {
             <h2 className="text-2xl font-extrabold text-foreground">Qui sommes-nous ?</h2>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            GameChanger est un projet du{' '}
-            <strong className="text-foreground">PEA Jeux de Société</strong>, un projet
-            extra-académique porté par des étudiants en psychomotricité de l'
-            <strong className="text-foreground">ISRP Paris</strong>. Notre objectif :
-            répertorier les jeux de société selon leur intérêt psychomoteur et les
+            GameChanger est un projet du PEA Jeux de Société, un projet
+            extra-académique porté par des étudiants en psychomotricité. Notre objectif :
+            répertorier les jeux de société selon leur intérêt psychomoteur et participer à les
             démocratiser comme outils auprès des professionnels du paramédical.
           </p>
           <p className="text-muted-foreground leading-relaxed mt-3">
-            Chaque jeu du catalogue est annoté avec des tags de fonctions et de
-            population posés par des étudiants en psychomotricité — un regard de
-            futur professionnel que vous ne trouverez nulle part ailleurs.
+            Chaque jeu de notre catalogue est annoté par nos soins avec les fonctions psychomotrices et exécutives qui y correspondent, pour vous aider à cibler vos recherches. 
           </p>
         </div>
       </section>
@@ -152,7 +148,7 @@ export default function HomePage() {
                 icon: <Search className="h-6 w-6" />,
                 title: 'Parcourez les résultats',
                 description:
-                  'Les jeux correspondant à vos critères s\'affichent avec leurs tags de fonctions et de population, posés par des étudiants en psychomotricité.',
+                  'Les jeux correspondant à vos critères s\'affichent avec leurs tags de fonctions et de population.',
               },
               {
                 number: '03',

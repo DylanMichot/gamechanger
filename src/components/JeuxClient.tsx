@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { SlidersHorizontal, X, RotateCcw } from 'lucide-react'
+import { SlidersHorizontal, X, RotateCcw, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Separator } from '@/components/ui/separator'
@@ -15,6 +15,7 @@ interface JeuxClientProps {
 }
 
 interface Filters {
+  name: string
   players: number | null
   ageRange: [number, number]
   pathologyTags: string[]
@@ -22,6 +23,7 @@ interface Filters {
 }
 
 const DEFAULT_FILTERS: Filters = {
+  name: '',
   players: null,
   ageRange: [0, 120],
   pathologyTags: [],
@@ -33,7 +35,10 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
   const filteredGames = useMemo(() => {
-    return games.filter((game) => {
+    const result = games.filter((game) => {
+      if (filters.name.trim()) {
+        if (!game.name.toLowerCase().includes(filters.name.toLowerCase())) return false
+      }
       if (filters.players !== null) {
         if (game.minPlayers > filters.players || game.maxPlayers < filters.players) return false
       }
@@ -49,6 +54,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
       }
       return true
     })
+    return result.sort((a, b) => a.name.localeCompare(b.name, 'fr'))
   }, [games, filters])
 
   function resetFilters() {
@@ -82,6 +88,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
   }
 
   const hasActiveFilters =
+    filters.name.trim() !== '' ||
     filters.players !== null ||
     filters.ageRange[0] !== 0 ||
     filters.ageRange[1] !== 120 ||
@@ -93,6 +100,31 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
 
   const FilterPanel = () => (
     <div className="space-y-6">
+      {/* Nom */}
+      <div className="space-y-3">
+        <h3 className="font-semibold text-sm text-foreground">Nom du jeu</h3>
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <input
+            type="text"
+            value={filters.name}
+            onChange={(e) => setFilters((prev) => ({ ...prev, name: e.target.value }))}
+            placeholder="Rechercher par nom..."
+            className="w-full pl-8 pr-3 h-9 rounded-md border border-input bg-background text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          />
+          {filters.name && (
+            <button
+              onClick={() => setFilters((p) => ({ ...p, name: '' }))}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <Separator />
+
       {/* Joueurs */}
       <div className="space-y-3">
         <h3 className="font-semibold text-sm text-foreground">Nombre de joueurs</h3>
@@ -133,9 +165,10 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
             max={120}
             step={1}
             value={filters.ageRange}
-            onValueChange={(v) =>
-              setFilters((prev) => ({ ...prev, ageRange: v as [number, number] }))
-            }
+            onValueChange={(v) => {
+              const [a, b] = v as [number, number]
+              setFilters((prev) => ({ ...prev, ageRange: [Math.min(a, b), Math.max(a, b)] }))
+            }}
             className="w-full"
           />
         </div>
@@ -169,40 +202,40 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
 
       <Separator />
 
-      {/* Pathologies - dropdown */}
-      {allPathologyTags.length > 0 && (
+      {/* Fonctions - dropdown */}
+      {allPsychomotorTags.length > 0 && (
         <>
           <div className="space-y-3">
-            <h3 className="font-semibold text-sm text-foreground">Populations</h3>
-            {availablePathologyTags.length > 0 && (
+            <h3 className="font-semibold text-sm text-foreground">Fonctions</h3>
+            {availablePsychomotorTags.length > 0 && (
               <select
                 value=""
                 onChange={(e) => {
                   if (e.target.value) {
                     setFilters((prev) => ({
                       ...prev,
-                      pathologyTags: [...prev.pathologyTags, e.target.value],
+                      psychomotorTags: [...prev.psychomotorTags, e.target.value],
                     }))
                   }
                 }}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <option value="">Ajouter une population...</option>
-                {availablePathologyTags.map((tag) => (
+                <option value="">Ajouter une fonction...</option>
+                {availablePsychomotorTags.map((tag) => (
                   <option key={tag} value={tag}>{tag}</option>
                 ))}
               </select>
             )}
-            {filters.pathologyTags.length > 0 && (
+            {filters.psychomotorTags.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {filters.pathologyTags.map((tag) => (
+                {filters.psychomotorTags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-800 px-2.5 py-0.5 text-xs font-semibold"
+                    className="inline-flex items-center gap-1 rounded-full bg-teal-100 text-teal-800 px-2.5 py-0.5 text-xs font-semibold"
                   >
                     {tag}
                     <button
-                      onClick={() => removePathologyTag(tag)}
+                      onClick={() => removePsychomotorTag(tag)}
                       className="hover:opacity-70"
                       aria-label={`Retirer ${tag}`}
                     >
@@ -217,39 +250,39 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
         </>
       )}
 
-      {/* Psychomoteur - dropdown */}
-      {allPsychomotorTags.length > 0 && (
+      {/* Populations - dropdown */}
+      {allPathologyTags.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-semibold text-sm text-foreground">Fonctions</h3>
-          {availablePsychomotorTags.length > 0 && (
+          <h3 className="font-semibold text-sm text-foreground">Populations</h3>
+          {availablePathologyTags.length > 0 && (
             <select
               value=""
               onChange={(e) => {
                 if (e.target.value) {
                   setFilters((prev) => ({
                     ...prev,
-                    psychomotorTags: [...prev.psychomotorTags, e.target.value],
+                    pathologyTags: [...prev.pathologyTags, e.target.value],
                   }))
                 }
               }}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <option value="">Ajouter une fonction...</option>
-              {availablePsychomotorTags.map((tag) => (
+              <option value="">Ajouter une population...</option>
+              {availablePathologyTags.map((tag) => (
                 <option key={tag} value={tag}>{tag}</option>
               ))}
             </select>
           )}
-          {filters.psychomotorTags.length > 0 && (
+          {filters.pathologyTags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
-              {filters.psychomotorTags.map((tag) => (
+              {filters.pathologyTags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 rounded-full bg-teal-100 text-teal-800 px-2.5 py-0.5 text-xs font-semibold"
+                  className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-800 px-2.5 py-0.5 text-xs font-semibold"
                 >
                   {tag}
                   <button
-                    onClick={() => removePsychomotorTag(tag)}
+                    onClick={() => removePathologyTag(tag)}
                     className="hover:opacity-70"
                     aria-label={`Retirer ${tag}`}
                   >
@@ -298,7 +331,8 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
             Filtres
             {hasActiveFilters && (
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
-                {(filters.players !== null ? 1 : 0) +
+                {(filters.name.trim() ? 1 : 0) +
+                  (filters.players !== null ? 1 : 0) +
                   filters.pathologyTags.length +
                   filters.psychomotorTags.length +
                   (filters.ageRange[0] !== 0 || filters.ageRange[1] !== 120 ? 1 : 0)}
