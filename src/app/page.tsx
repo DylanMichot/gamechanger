@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Search, Star, NotebookPen, Users } from 'lucide-react'
+import { Search, Star, NotebookPen, Users, GraduationCap, BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
@@ -23,14 +23,13 @@ export default function HomePage() {
             <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight mb-6">
               Le bon jeu,{' '}
               <span className="text-accent">au bon moment</span>,<br />
-              pour chaque patient.
+              pour chaque séance.
             </h1>
 
             <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl leading-relaxed">
-              Nous aidons les psychomotriciens, ergothérapeutes et
-              psychologues à trouver des jeux de société adaptés aux besoins
-              spécifiques de leurs patients - par population, tranche
-              d'âge et objectif thérapeutique.
+              Un outil créé par des étudiants en psychomotricité pour explorer
+              les jeux de société par population, tranche d'âge et fonctions
+              psychomotrices.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -57,6 +56,29 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Qui sommes-nous */}
+      <section className="container py-16">
+        <div className="max-w-3xl mx-auto bg-secondary rounded-2xl p-8 sm:p-10 border border-border">
+          <div className="flex items-center gap-3 mb-4">
+            <GraduationCap className="h-7 w-7 text-accent shrink-0" />
+            <h2 className="text-2xl font-extrabold text-foreground">Qui sommes-nous ?</h2>
+          </div>
+          <p className="text-muted-foreground leading-relaxed">
+            GameChanger est un projet du{' '}
+            <strong className="text-foreground">PEA Jeux de Société</strong>, un projet
+            extra-académique porté par des étudiants en psychomotricité de l'
+            <strong className="text-foreground">ISRP Paris</strong>. Notre objectif :
+            répertorier les jeux de société selon leur intérêt psychomoteur et les
+            démocratiser comme outils auprès des professionnels du paramédical.
+          </p>
+          <p className="text-muted-foreground leading-relaxed mt-3">
+            Chaque jeu du catalogue est annoté avec des tags de fonctions et de
+            population posés par des étudiants en psychomotricité — un regard de
+            futur professionnel que vous ne trouverez nulle part ailleurs.
+          </p>
+        </div>
+      </section>
+
       {/* Pour qui */}
       <section className="container py-20">
         <div className="text-center mb-14">
@@ -64,8 +86,8 @@ export default function HomePage() {
             Pour qui ?
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            GameChanger est conçu pour les professionnels de santé qui
-            souhaitent intégrer les jeux de société dans leur pratique clinique.
+            GameChanger s'adresse aux professionnels du paramédical qui souhaitent
+            explorer les jeux de société comme supports de séance.
           </p>
         </div>
 
@@ -75,19 +97,19 @@ export default function HomePage() {
               icon: '🧠',
               title: 'Psychomotriciens',
               description:
-                'Trouvez des jeux travaillant la coordination, l\'équilibre, la motricité fine et les fonctions exécutives adaptés à chaque patient.',
+                'Explorez des jeux pouvant mobiliser la coordination, la motricité fine, les fonctions exécutives et d\'autres domaines psychomoteurs selon votre population.',
             },
             {
               icon: '🧩',
               title: 'Ergothérapeutes',
               description:
-                'Sélectionnez des activités ludiques favorisant la réautonomisation, la motricité et la réadaptation quels que soient vos patients.',
+                'Filtrez des jeux susceptibles de favoriser la motricité, l\'autonomie et la réadaptation, adaptés à différentes populations et tranches d\'âge.',
             },
             {
               icon: '💬',
-              title: 'Psychologues',
+              title: 'Autres professionnels',
               description:
-                'Identifiez des jeux propices au lien thérapeutique, à l\'expression émotionnelle et au travail sur les troubles cognitifs.',
+                'Identifiez des jeux pouvant soutenir l\'expression, l\'attention ou les fonctions cognitives selon vos critères de recherche.',
             },
           ].map((item) => (
             <div
@@ -123,21 +145,21 @@ export default function HomePage() {
                 icon: <NotebookPen className="h-6 w-6" />,
                 title: 'Définissez vos critères',
                 description:
-                  'Nombre de patients, tranche d\'âge, populations ciblées et fonctions à travailler.',
+                  'Nombre de joueurs, tranche d\'âge, populations ciblées et fonctions à explorer.',
               },
               {
                 number: '02',
                 icon: <Search className="h-6 w-6" />,
                 title: 'Parcourez les résultats',
                 description:
-                  'Les jeux correspondant à vos critères s\'affichent avec leurs caractéristiques thérapeutiques.',
+                  'Les jeux correspondant à vos critères s\'affichent avec leurs tags de fonctions et de population, posés par des étudiants en psychomotricité.',
               },
               {
                 number: '03',
                 icon: <Star className="h-6 w-6" />,
                 title: 'Sauvegardez vos favoris',
                 description:
-                  'Enregistrez les jeux pertinents dans vos favoris pour les retrouver facilement.',
+                  'Enregistrez les jeux qui vous intéressent dans vos favoris pour les retrouver facilement.',
               },
             ].map((step) => (
               <div key={step.number} className="flex gap-5">
@@ -164,12 +186,12 @@ export default function HomePage() {
       {/* CTA */}
       <section className="container py-20 text-center">
         <div className="max-w-2xl mx-auto">
-          <Users className="h-12 w-12 mx-auto mb-6 text-accent" />
+          <BookOpen className="h-12 w-12 mx-auto mb-6 text-accent" />
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">
             Prêt à enrichir votre pratique ?
           </h2>
           <p className="text-muted-foreground text-lg mb-8">
-            Accédez gratuitement à notre catalogue de jeux sélectionnés par nos soins.
+            Accédez gratuitement à notre catalogue de jeux annotés par nos soins.
           </p>
           <Button asChild size="lg" className="gap-2 text-base h-12 px-10">
             <Link href="/jeux">

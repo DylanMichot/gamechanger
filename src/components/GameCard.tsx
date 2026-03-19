@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Users, Calendar } from 'lucide-react'
+import { Users, Cake } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { FavoriteButton } from '@/components/FavoriteButton'
 import type { BoardGame } from '@/types'
@@ -107,7 +107,7 @@ export function GameCard({ game, onTagClick }: GameCardProps) {
           {/* Meta */}
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-auto pt-2 border-t border-border">
             <div className="flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5" />
+              <Cake className="h-3.5 w-3.5" />
               <span>
                 {game.minAge === game.maxAge
                   ? `${game.minAge} ans`

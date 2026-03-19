@@ -220,7 +220,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
       {/* Psychomoteur - dropdown */}
       {allPsychomotorTags.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-semibold text-sm text-foreground">Fonctions psychomotrices</h3>
+          <h3 className="font-semibold text-sm text-foreground">Fonctions</h3>
           {availablePsychomotorTags.length > 0 && (
             <select
               value=""

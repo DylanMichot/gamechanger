@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Users, Calendar } from 'lucide-react'
+import { ArrowLeft, Users, Cake } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -76,7 +76,7 @@ export default async function GameDetailPage({ params }: PageProps) {
           {/* Caractéristiques */}
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-secondary rounded-xl p-4 flex items-center gap-3">
-              <Calendar className="h-5 w-5 text-accent shrink-0" />
+              <Cake className="h-5 w-5 text-accent shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
                   Tranche d'âge
@@ -125,7 +125,7 @@ export default async function GameDetailPage({ params }: PageProps) {
           {game.psychomotorTags.length > 0 && (
             <div className="space-y-2">
               <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wide">
-                Fonctions psychomotrices
+                Fonctions
               </h2>
               <div className="flex flex-wrap gap-2">
                 {game.psychomotorTags.map((tag) => (

@@ -8,11 +8,11 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: 'GameChanger — Jeux thérapeutiques pour professionnels de santé',
+    default: 'GameChanger — Jeux de société pour les professionnels du paramédical',
     template: '%s | GameChanger',
   },
   description:
-    'Trouvez les jeux de société adaptés à votre pratique clinique. Outil de recherche pour psychomotriciens, ergothérapeutes et psychologues.',
+    'Un outil créé par des étudiants en psychomotricité pour explorer les jeux de société par population, tranche d\'âge et fonctions psychomotrices.',
 }
 
 export default function RootLayout({

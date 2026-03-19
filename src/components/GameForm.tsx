@@ -13,6 +13,25 @@ import { TagInput } from '@/components/TagInput'
 import type { BoardGame, BoardGameFormData } from '@/types'
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024
+
+// Liste officielle des fonctions — modifier ici pour en ajouter ou en retirer
+export const FONCTIONS_PSYCHOMOTRICES = [
+  'temps',
+  'espace',
+  'schéma corporel',
+  'motricité fine',
+  'motricité globale',
+  'graphomotricité',
+  'tonus',
+  'praxies',
+  'coordination',
+  'coordinations oculo-manuelles',
+  'attention',
+  'planification',
+  'inhibition',
+  'mémoire de travail',
+  'flexibilité mentale',
+]
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 
 interface GameFormProps {
@@ -293,15 +312,15 @@ export function GameForm({ initialData, mode, existingPathologyTags = [], existi
             />
           </div>
 
-          {/* Tags fonctions psychomotrices */}
+          {/* Tags fonctions */}
           <div className="space-y-2">
-            <Label>Fonctions psychomotrices</Label>
+            <Label>Fonctions</Label>
             <TagInput
               value={formData.psychomotorTags}
               onChange={(tags) => setFormData((p) => ({ ...p, psychomotorTags: tags }))}
-              placeholder="Ex : coordination, équilibre, mémoire..."
+              placeholder="Ex : coordination, attention, praxies..."
               variant="psychomotor"
-              suggestions={existingPsychomotorTags}
+              suggestions={FONCTIONS_PSYCHOMOTRICES}
             />
           </div>
         </div>
