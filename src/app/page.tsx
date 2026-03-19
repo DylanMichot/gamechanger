@@ -63,7 +63,7 @@ export default function HomePage() {
             Qui sommes-nous ?
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Un projet étudiant au service des professionnels du paramédical.
+            Le PEA Jeux de Société
           </p>
         </div>
 
@@ -71,21 +71,21 @@ export default function HomePage() {
           {[
             {
               icon: '🎓',
-              title: 'Le PEA Jeux de Société',
+              title: 'Notre équipe',
               description:
-                'Un projet extra-académique porté par des étudiants en psychomotricité de l\'ISRP Paris, conçu en dehors des cours pour répondre à un vrai besoin de terrain.',
+                'Un projet extra-académique porté par des étudiants en psychomotricité de l\'ISRP Paris, réuni par passion du métier et des jeux de société.',
             },
             {
               icon: '🎯',
               title: 'Notre objectif',
               description:
-                'Répertorier les jeux de société selon leur intérêt psychomoteur et les démocratiser comme outils concrets auprès des professionnels du paramédical.',
+                'Répertorier les jeux de société selon leur intérêt psychomoteur et les démocratiser comme outils auprès des professionnels du paramédical.',
             },
             {
               icon: '🔍',
               title: 'Notre approche',
               description:
-                'Chaque jeu est annoté par nos soins avec des tags de fonctions et de population, posés avec le regard de futurs professionnels — une ressource introuvable ailleurs.',
+                'Chaque jeu est annoté par nos soins selon les fonctions psychomotrices et exécutives qu\'il implique, avec l\'âge recommandé et le nombre de joueurs.',
             },
           ].map((item) => (
             <div
