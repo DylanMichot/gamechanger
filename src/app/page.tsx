@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Search, Star, NotebookPen, Users, GraduationCap, BookOpen } from 'lucide-react'
+import { Search, Star, NotebookPen, BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
@@ -57,55 +57,35 @@ export default function HomePage() {
       </section>
 
       {/* Qui sommes-nous */}
-      <section className="container py-16">
-        <div className="max-w-3xl mx-auto bg-secondary rounded-2xl p-8 sm:p-10 border border-border">
-          <div className="flex items-center gap-3 mb-4">
-            <GraduationCap className="h-7 w-7 text-accent shrink-0" />
-            <h2 className="text-2xl font-extrabold text-foreground">Qui sommes-nous ?</h2>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">
-            GameChanger est un projet du PEA Jeux de Société, un projet
-            extra-académique porté par des étudiants en psychomotricité. Notre objectif :
-            répertorier les jeux de société selon leur intérêt psychomoteur et participer à les
-            démocratiser comme outils auprès des professionnels du paramédical.
-          </p>
-          <p className="text-muted-foreground leading-relaxed mt-3">
-            Chaque jeu de notre catalogue est annoté par nos soins avec les fonctions psychomotrices et exécutives qui y correspondent, pour vous aider à cibler vos recherches. 
-          </p>
-        </div>
-      </section>
-
-      {/* Pour qui */}
       <section className="container py-20">
         <div className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground mb-4">
-            Pour qui ?
+            Qui sommes-nous ?
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            GameChanger s'adresse aux professionnels du paramédical qui souhaitent
-            explorer les jeux de société comme supports de séance.
+            Un projet étudiant au service des professionnels du paramédical.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              icon: '🧠',
-              title: 'Psychomotriciens',
+              icon: '🎓',
+              title: 'Le PEA Jeux de Société',
               description:
-                'Explorez des jeux pouvant mobiliser la coordination, la motricité fine, les fonctions exécutives et d\'autres domaines psychomoteurs selon votre population.',
+                'Un projet extra-académique porté par des étudiants en psychomotricité de l\'ISRP Paris, conçu en dehors des cours pour répondre à un vrai besoin de terrain.',
             },
             {
-              icon: '🧩',
-              title: 'Ergothérapeutes',
+              icon: '🎯',
+              title: 'Notre objectif',
               description:
-                'Filtrez des jeux susceptibles de favoriser la motricité, l\'autonomie et la réadaptation, adaptés à différentes populations et tranches d\'âge.',
+                'Répertorier les jeux de société selon leur intérêt psychomoteur et les démocratiser comme outils concrets auprès des professionnels du paramédical.',
             },
             {
-              icon: '💬',
-              title: 'Autres professionnels',
+              icon: '🔍',
+              title: 'Notre approche',
               description:
-                'Identifiez des jeux pouvant soutenir l\'expression, l\'attention ou les fonctions cognitives selon vos critères de recherche.',
+                'Chaque jeu est annoté par nos soins avec des tags de fonctions et de population, posés avec le regard de futurs professionnels — une ressource introuvable ailleurs.',
             },
           ].map((item) => (
             <div

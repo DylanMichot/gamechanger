@@ -9,7 +9,7 @@ export function SignOutButton() {
     <Button
       variant="ghost"
       size="sm"
-      onClick={() => signOut({ callbackUrl: '/admin/login' })}
+      onClick={() => signOut({ callbackUrl: '/' })}
       className="text-primary-foreground hover:bg-primary-foreground/10 gap-2"
     >
       <LogOut className="h-4 w-4" />

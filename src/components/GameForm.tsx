@@ -259,7 +259,7 @@ export function GameForm({ initialData, mode, existingPathologyTags = [] }: Game
               id="addedBy"
               value={formData.addedBy ?? ''}
               onChange={(e) => setFormData((p) => ({ ...p, addedBy: e.target.value }))}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <option value="">— Sélectionner un membre —</option>
               {MEMBRES_EQUIPE.map((m) => (

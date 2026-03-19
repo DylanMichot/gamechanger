@@ -218,7 +218,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
                     }))
                   }
                 }}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <option value="">Ajouter une fonction...</option>
                 {availablePsychomotorTags.map((tag) => (
@@ -265,7 +265,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
                   }))
                 }
               }}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <option value="">Ajouter une population...</option>
               {availablePathologyTags.map((tag) => (
