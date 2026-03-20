@@ -17,7 +17,7 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium mb-8">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-              Outil gratuit du PEA Jeux de Société
+              Un projet étudiant au service des professionnels
             </div>
 
             <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight mb-6">
@@ -63,7 +63,7 @@ export default function HomePage() {
             Qui sommes-nous ?
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Le PEA Jeux de Société
+            Un projet étudiant au service des professionnels
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export default function HomePage() {
               icon: '🎓',
               title: 'Notre équipe',
               description:
-                'Un projet extra-académique porté par des étudiants en psychomotricité de l\'ISRP Paris, réuni par passion du métier et des jeux de société.',
+                'Des étudiants en psychomotricité de l\'ISRP Paris, réunis autour d\'un projet extra-académique par passion du métier et des jeux de société.',
             },
             {
               icon: '🎯',
