@@ -28,3 +28,4 @@ prisma/migrations/dev.db
 # OS
 .DS_Store
 Thumbs.db
+.env*.local
