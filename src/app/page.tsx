@@ -73,7 +73,7 @@ export default function HomePage() {
               icon: '🎓',
               title: 'Notre équipe',
               description:
-                'Des étudiants en psychomotricité de l\'ISRP Paris, réunis autour d\'un projet extra-académique par passion du métier et des jeux de société.',
+                'Des étudiants en psychomotricité de l\'ISRP Paris, réunis autour d\'un projet extra académique par passion du métier et des jeux de société.',
             },
             {
               icon: '🎯',

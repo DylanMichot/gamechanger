@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
-import { Gamepad2, Plus, LayoutDashboard } from 'lucide-react'
+import { Gamepad2, Plus, LayoutDashboard, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@/components/SignOutButton'
 
@@ -41,6 +41,17 @@ export default async function AdminProtectedLayout({
               <Link href="/admin">
                 <LayoutDashboard className="h-4 w-4" />
                 <span className="hidden sm:inline">Tableau de bord</span>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="text-primary-foreground hover:bg-primary-foreground/10 gap-2"
+            >
+              <Link href="/admin/membres">
+                <Users className="h-4 w-4" />
+                <span className="hidden sm:inline">Membres</span>
               </Link>
             </Button>
             <Button

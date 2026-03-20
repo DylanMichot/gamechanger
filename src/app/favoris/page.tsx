@@ -25,11 +25,13 @@ export default function FavorisPage() {
   const [loading, setLoading] = useState(true)
   const [favoriteIds, setFavoriteIds] = useState<string[]>([])
   const [printDate, setPrintDate] = useState('')
+  const [printUrl, setPrintUrl] = useState('')
 
   useEffect(() => {
     const ids = getFavoriteIds()
     setFavoriteIds(ids)
     setPrintDate(new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }))
+    setPrintUrl(window.location.origin)
 
     if (ids.length === 0) {
       setLoading(false)
@@ -91,7 +93,7 @@ export default function FavorisPage() {
           <div className="flex items-end justify-between">
             <div>
               <p className="text-2xl font-extrabold tracking-tight">GameChanger</p>
-              <p className="text-sm text-gray-500">gamechanger-pea.vercel.app</p>
+              <p className="text-sm text-gray-500">{printUrl}</p>
             </div>
             <div className="text-right text-sm text-gray-500">
               <p className="font-semibold">Mes favoris</p>
@@ -153,7 +155,7 @@ export default function FavorisPage() {
                 </span>
               </div>
               {game.description && (
-                <p className="text-xs text-gray-600 mb-1.5 line-clamp-2 leading-snug">
+                <p className="text-xs text-gray-600 mb-1.5 leading-snug">
                   {game.description}
                 </p>
               )}

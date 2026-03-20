@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { TagInput } from '@/components/TagInput'
-import { MEMBRES_EQUIPE, FONCTIONS_PSYCHOMOTRICES } from '@/lib/constants'
+import { FONCTIONS_PSYCHOMOTRICES } from '@/lib/constants'
 import type { BoardGame, BoardGameFormData } from '@/types'
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024
@@ -26,6 +26,16 @@ interface GameFormProps {
 export function GameForm({ initialData, mode, existingPathologyTags = [] }: GameFormProps) {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [membres, setMembres] = useState<string[]>([])
+
+  useEffect(() => {
+    fetch('/api/members')
+      .then((r) => r.json())
+      .then((data: { name: string; active: boolean }[]) =>
+        setMembres(data.filter((m) => m.active).map((m) => m.name))
+      )
+      .catch(() => setMembres([]))
+  }, [])
 
   const [formData, setFormData] = useState<BoardGameFormData>({
     name: initialData?.name ?? '',
@@ -262,7 +272,7 @@ export function GameForm({ initialData, mode, existingPathologyTags = [] }: Game
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <option value="">— Sélectionner un membre —</option>
-              {MEMBRES_EQUIPE.map((m) => (
+              {membres.map((m) => (
                 <option key={m} value={m}>{m}</option>
               ))}
             </select>

@@ -51,58 +51,48 @@ export function GameCard({ game, onTagClick }: GameCardProps) {
             </p>
           </div>
 
-          {/* Tags — fonctions en premier, puis populations */}
-          <div className="flex flex-wrap gap-1.5">
-            {game.psychomotorTags.slice(0, 2).map((tag) =>
-              onTagClick ? (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onTagClick(tag, 'psychomotor')
-                  }}
-                  title={`Filtrer par "${tag}"`}
-                >
-                  <Badge variant="psychomotor" className="text-xs cursor-pointer hover:opacity-75 transition-opacity">
-                    {tag}
-                  </Badge>
-                </button>
-              ) : (
-                <Badge key={tag} variant="psychomotor" className="text-xs">
-                  {tag}
-                </Badge>
-              )
-            )}
-            {game.pathologyTags.slice(0, 3).map((tag) =>
-              onTagClick ? (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onTagClick(tag, 'pathology')
-                  }}
-                  title={`Filtrer par "${tag}"`}
-                >
-                  <Badge variant="pathology" className="text-xs cursor-pointer hover:opacity-75 transition-opacity">
-                    {tag}
-                  </Badge>
-                </button>
-              ) : (
-                <Badge key={tag} variant="pathology" className="text-xs">
-                  {tag}
-                </Badge>
-              )
-            )}
-            {game.pathologyTags.length + game.psychomotorTags.length > 5 && (
-              <Badge variant="outline" className="text-xs text-muted-foreground">
-                +{game.pathologyTags.length + game.psychomotorTags.length - 5}
-              </Badge>
-            )}
-          </div>
+          {/* Tags — fonctions en priorité, populations en complément */}
+          {(() => {
+            const MAX = 5
+            const funcCount = Math.min(game.psychomotorTags.length, MAX)
+            const popCount = Math.min(game.pathologyTags.length, Math.max(0, MAX - funcCount))
+            const hidden = (game.psychomotorTags.length - funcCount) + (game.pathologyTags.length - popCount)
+            return (
+              <div className="flex flex-wrap gap-1.5">
+                {game.psychomotorTags.slice(0, funcCount).map((tag) =>
+                  onTagClick ? (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTagClick(tag, 'psychomotor') }}
+                      title={`Filtrer par "${tag}"`}
+                    >
+                      <Badge variant="psychomotor" className="text-xs cursor-pointer hover:opacity-75 transition-opacity">{tag}</Badge>
+                    </button>
+                  ) : (
+                    <Badge key={tag} variant="psychomotor" className="text-xs">{tag}</Badge>
+                  )
+                )}
+                {game.pathologyTags.slice(0, popCount).map((tag) =>
+                  onTagClick ? (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTagClick(tag, 'pathology') }}
+                      title={`Filtrer par "${tag}"`}
+                    >
+                      <Badge variant="pathology" className="text-xs cursor-pointer hover:opacity-75 transition-opacity">{tag}</Badge>
+                    </button>
+                  ) : (
+                    <Badge key={tag} variant="pathology" className="text-xs">{tag}</Badge>
+                  )
+                )}
+                {hidden > 0 && (
+                  <Badge variant="outline" className="text-xs text-muted-foreground">+{hidden}</Badge>
+                )}
+              </div>
+            )
+          })()}
 
           {/* Meta */}
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-auto pt-2 border-t border-border">
