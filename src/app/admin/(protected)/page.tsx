@@ -1,21 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
-import { Plus, Pencil } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { DeleteGameButton } from '@/components/DeleteGameButton'
+import { AdminGamesTable } from '@/components/AdminGamesTable'
 
 export const metadata: Metadata = {
   title: 'Administration — GameChanger',
@@ -23,25 +13,10 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic'
 
-function formatAge(minAge: number, maxAge: number) {
-  if (minAge === maxAge) return `${minAge} ans`
-  if (maxAge >= 120) return `${minAge}+ ans`
-  return `${minAge}–${maxAge} ans`
-}
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
-}
 
 export default async function AdminPage() {
   const [games, session] = await Promise.all([
-    prisma.boardGame.findMany({ orderBy: { createdAt: 'desc' } }),
+    prisma.boardGame.findMany({ orderBy: { name: 'asc' } }),
     getServerSession(authOptions),
   ])
 
@@ -79,99 +54,7 @@ export default async function AdminPage() {
           </Button>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/30">
-                <TableHead className="w-16">Image</TableHead>
-                <TableHead>Nom</TableHead>
-                <TableHead className="hidden md:table-cell">Fonctions</TableHead>
-                <TableHead className="hidden md:table-cell">Populations</TableHead>
-                <TableHead className="hidden sm:table-cell">Âge</TableHead>
-                <TableHead className="hidden sm:table-cell">Joueurs</TableHead>
-                <TableHead className="w-24 text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {games.map((game) => (
-                <TableRow key={game.id}>
-                  <TableCell>
-                    <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-muted shrink-0">
-                      {game.imageUrl ? (
-                        <Image
-                          src={game.imageUrl}
-                          alt={game.name}
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-xl">🎲</div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className="font-semibold text-foreground line-clamp-1">{game.name}</span>
-                    <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{game.description}</p>
-                    {game.addedBy && (
-                      <p className="text-xs text-muted-foreground/70 mt-0.5">
-                        Ajouté par {game.addedBy} · {formatDate(game.createdAt)}
-                      </p>
-                    )}
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
-                      {game.psychomotorTags.slice(0, 2).map((tag) => (
-                        <Badge key={tag} variant="psychomotor" className="text-xs">{tag}</Badge>
-                      ))}
-                      {game.psychomotorTags.length > 2 && (
-                        <Badge variant="outline" className="text-xs">+{game.psychomotorTags.length - 2}</Badge>
-                      )}
-                      {game.psychomotorTags.length === 0 && (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    <div className="flex flex-wrap gap-1 max-w-[200px]">
-                      {game.pathologyTags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="pathology" className="text-xs">{tag}</Badge>
-                      ))}
-                      {game.pathologyTags.length > 3 && (
-                        <Badge variant="outline" className="text-xs">+{game.pathologyTags.length - 3}</Badge>
-                      )}
-                      {game.pathologyTags.length === 0 && (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell text-sm text-muted-foreground whitespace-nowrap">
-                    {formatAge(game.minAge, game.maxAge)}
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell text-sm text-muted-foreground whitespace-nowrap">
-                    {game.minPlayers === game.maxPlayers ? `${game.minPlayers}` : `${game.minPlayers}–${game.maxPlayers}`}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        asChild
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:text-foreground"
-                      >
-                        <Link href={`/admin/modifier/${game.id}`}>
-                          <Pencil className="h-4 w-4" />
-                          <span className="sr-only">Modifier</span>
-                        </Link>
-                      </Button>
-                      {isAdmin && <DeleteGameButton gameId={game.id} gameName={game.name} />}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <AdminGamesTable games={games} isAdmin={isAdmin} />
       )}
     </div>
   )
