@@ -212,11 +212,11 @@ export function TagInput({
           pour ajouter un tag
         </p>
       )}
-      {showAllOnFocus && (
+      {/* {showAllOnFocus && (
         <p className="text-xs text-muted-foreground">
           Cliquez sur le champ pour voir les options disponibles
         </p>
-      )}
+      )} */}
     </div>
   )
 }

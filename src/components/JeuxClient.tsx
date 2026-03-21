@@ -81,9 +81,9 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
     }
   }
 
-  function removePathologyTag(tag: string) {
-    setFilters((prev) => ({ ...prev, pathologyTags: prev.pathologyTags.filter((t) => t !== tag) }))
-  }
+  // function removePathologyTag(tag: string) {
+  //   setFilters((prev) => ({ ...prev, pathologyTags: prev.pathologyTags.filter((t) => t !== tag) }))
+  // }
 
 
   const hasActiveFilters =
@@ -94,7 +94,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
     filters.pathologyTags.length > 0 ||
     filters.psychomotorTags.length > 0
 
-  const availablePathologyTags = allPathologyTags.filter((t) => !filters.pathologyTags.includes(t))
+  // const availablePathologyTags = allPathologyTags.filter((t) => !filters.pathologyTags.includes(t))
   const availablePsychomotorTags = allPsychomotorTags.filter((t) => !filters.psychomotorTags.includes(t))
 
   const groupedPsychomotorTags = useMemo(() => {
@@ -222,18 +222,19 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
             <TagInput
               value={filters.psychomotorTags}
               onChange={(tags) => setFilters((prev) => ({ ...prev, psychomotorTags: tags }))}
-              placeholder="Cliquer pour voir les fonctions..."
+              placeholder="Cliquez pour voir les fonctions..."
               variant="psychomotor"
               suggestions={allPsychomotorTags}
               suggestionGroups={groupedPsychomotorTags}
               showAllOnFocus={true}
             />
           </div>
-          <Separator />
+          {/*<Separator />*/}
         </>
       )}
 
       {/* Populations - dropdown */}
+      {/* TODO: décommenter quand on veut afficher le filtre populations
       {allPathologyTags.length > 0 && (
         <div className="space-y-3">
           <h3 className="font-semibold text-sm text-foreground">Populations</h3>
@@ -277,6 +278,7 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
           )}
         </div>
       )}
+      */}
     </div>
   )
 
