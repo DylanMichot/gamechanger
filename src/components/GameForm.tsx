@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { TagInput } from '@/components/TagInput'
 import { FONCTIONS_PSYCHOMOTRICES } from '@/lib/constants'
+import { FONCTIONS_DETAIL } from '@/lib/fonctions'
 import type { BoardGame, BoardGameFormData } from '@/types'
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024
@@ -333,6 +334,26 @@ export function GameForm({ initialData, mode, existingPathologyTags = [] }: Game
               suggestions={FONCTIONS_PSYCHOMOTRICES}
               showAllOnFocus={true}
             />
+            {formData.psychomotorTags.length > 0 && (
+              <div className="rounded-lg border border-teal-200 bg-teal-50/60 px-4 py-3 space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                <p className="text-xs font-semibold text-teal-700 uppercase tracking-wide">
+                  Vérifiez vos sélections
+                </p>
+                <ul className="space-y-2">
+                  {formData.psychomotorTags.map((tag) => {
+                    const detail = FONCTIONS_DETAIL.find((f) => f.nom === tag)
+                    return (
+                      <li key={tag} className="text-sm leading-snug">
+                        <span className="font-semibold text-foreground">{tag}</span>
+                        {detail && (
+                          <span className="text-muted-foreground"> — {detail.question}</span>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Tags populations */}

@@ -1,3 +1,5 @@
+import { FONCTIONS_DETAIL } from '@/lib/fonctions'
+
 // Membres de l'équipe PEA Jeux de Société
 // Modifier ici pour ajouter ou retirer des membres
 export const MEMBRES_EQUIPE = [
@@ -24,21 +26,5 @@ export const MEMBRES_EQUIPE = [
   'Aurore V',
 ]
 
-// Liste officielle des fonctions — modifier ici pour en ajouter ou en retirer
-export const FONCTIONS_PSYCHOMOTRICES = [
-  'temps',
-  'espace',
-  'schéma corporel',
-  'motricité fine',
-  'motricité globale',
-  'graphomotricité',
-  'tonus',
-  'praxies',
-  'coordination',
-  'coordinations oculo-manuelles',
-  'attention',
-  'planification',
-  'inhibition',
-  'mémoire de travail',
-  'flexibilité mentale',
-]
+// Liste officielle des fonctions — gérer dans src/lib/fonctions.ts
+export const FONCTIONS_PSYCHOMOTRICES = FONCTIONS_DETAIL.map((f) => f.nom)
