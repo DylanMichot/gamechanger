@@ -34,6 +34,7 @@ export function TagInput({
   const [showSuggestions, setShowSuggestions] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Flat filtered suggestions (used when no groups)
   const filteredSuggestions = useMemo(() => {
@@ -76,12 +77,15 @@ export function TagInput({
   }, [])
 
   function addTag(tag: string) {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current)
+      closeTimeout.current = null
+    }
     const trimmed = tag.trim()
     if (trimmed && !value.includes(trimmed)) {
       onChange([...value, trimmed])
     }
     setInputValue('')
-    // Keep dropdown open so user can keep selecting without re-clicking
     setShowSuggestions(true)
     inputRef.current?.focus()
   }
@@ -144,9 +148,15 @@ export function TagInput({
               setShowSuggestions(true)
             }}
             onKeyDown={handleKeyDown}
-            onFocus={() => setShowSuggestions(true)}
+            onFocus={() => {
+              if (closeTimeout.current) {
+                clearTimeout(closeTimeout.current)
+                closeTimeout.current = null
+              }
+              setShowSuggestions(true)
+            }}
             onBlur={() => {
-              setTimeout(() => setShowSuggestions(false), 150)
+              closeTimeout.current = setTimeout(() => setShowSuggestions(false), 150)
               if (inputValue.trim() && !showAllOnFocus) addTag(inputValue)
             }}
             placeholder={value.length === 0 ? placeholder : ''}
@@ -161,7 +171,7 @@ export function TagInput({
           {filteredGroups
             ? filteredGroups.map((group) => (
                 <div key={group.label}>
-                  <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/50 border-b border-border sticky top-0">
+                  <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground bg-muted border-b border-border">
                     {group.label}
                   </div>
                   {group.items.map((item) => (

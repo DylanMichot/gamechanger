@@ -10,12 +10,8 @@ export interface FonctionCategorie {
 
 export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
   {
-    categorie: 'Tonus & posture',
+    categorie: 'Tonus',
     fonctions: [
-      {
-        nom: 'Tonus de fond',
-        question: 'Ce jeu nécessite-t-il un état de tension musculaire de base maintenu sur toute la durée de la partie ?',
-      },
       {
         nom: 'Tonus postural',
         question: "Ce jeu demande-t-il de maintenir une position du corps ou d'un segment corporel contre la gravité ?",
@@ -24,6 +20,11 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
         nom: "Tonus d'action",
         question: "Ce jeu requiert-il d'ajuster la tension musculaire au moment précis d'une action ?",
       },
+    ],
+  },
+  {
+    categorie: 'Équilibre',
+    fonctions: [
       {
         nom: 'Équilibre statique',
         question: "Ce jeu oblige-t-il à rester immobile dans une posture stable sans se déplacer ?",
@@ -45,18 +46,10 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
         nom: 'Image du corps',
         question: "Ce jeu invite-t-il le joueur à percevoir, mimer ou représenter son propre corps de façon consciente et subjective ?",
       },
-      {
-        nom: 'Latéralité',
-        question: "Ce jeu exige-t-il l'utilisation préférentielle ou différenciée d'un côté du corps ?",
-      },
-      {
-        nom: 'Orientation droite/gauche',
-        question: "Ce jeu requiert-il de distinguer et d'utiliser correctement les notions de droite et de gauche, sur soi ou sur autrui ?",
-      },
     ],
   },
   {
-    categorie: 'Motricité globale',
+    categorie: 'Coordinations & dissociations',
     fonctions: [
       {
         nom: 'Coordination dynamique générale',
@@ -67,9 +60,18 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
         question: "Ce jeu nécessite-t-il d'utiliser les deux mains simultanément, en coopération ou en rôles différenciés ?",
       },
       {
+        nom: 'Coordination oculo-motrice',
+        question: "Ce jeu exige-t-il une synchronisation précise entre le regard et le geste de la main ?",
+      },
+      {
         nom: 'Dissociation segmentaire',
         question: "Ce jeu exige-t-il de mobiliser une partie du corps de façon indépendante, sans entraîner les autres segments ?",
       },
+    ],
+  },
+  {
+    categorie: 'Motricité globale',
+    fonctions: [
       {
         nom: 'Motricité globale (corps entier)',
         question: "Ce jeu engage-t-il le corps entier dans ses actions ?",
@@ -77,7 +79,7 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
     ],
   },
   {
-    categorie: 'Motricité fine & praxies',
+    categorie: 'Motricité fine',
     fonctions: [
       {
         nom: 'Motricité fine manuelle',
@@ -87,6 +89,11 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
         nom: 'Graphomotricité',
         question: "Ce jeu implique-t-il d'écrire, de tracer ou de dessiner à la main comme composante du jeu ?",
       },
+    ],
+  },
+  {
+    categorie: 'Praxies',
+    fonctions: [
       {
         nom: 'Praxies idéomotrices',
         question: "Ce jeu requiert-il d'exécuter des gestes symboliques ou conventionnels sur consigne ?",
@@ -101,7 +108,7 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
       },
       {
         nom: 'Praxies visuo-spatiales',
-        question: "Ce jeu nécessite-t-il de reproduire ou d'organiser des formes, des figures ou des configurations spatiales avec précision ?",
+        question: "Ce jeu demande-t-il d'analyser des configurations spatiales visuelles pour les traduire en gestes de placement ou de reproduction précis ?",
       },
       {
         nom: 'Praxies bucco-faciales',
@@ -110,12 +117,8 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
     ],
   },
   {
-    categorie: 'Coordination sensori-motrice',
+    categorie: 'Intégration sensorielle',
     fonctions: [
-      {
-        nom: 'Coordination oculo-motrice',
-        question: "Ce jeu exige-t-il une synchronisation précise entre le regard et le geste de la main ?",
-      },
       {
         nom: 'Intégration proprioceptive',
         question: "Ce jeu sollicite-t-il la perception des positions et tensions articulaires pour réguler ou guider le geste, sans s'appuyer uniquement sur la vision ?",
@@ -127,32 +130,6 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
     ],
   },
   {
-    categorie: 'Rythme & temporalité motrice',
-    fonctions: [
-      {
-        nom: 'Sens du rythme',
-        question: "Ce jeu demande-t-il de percevoir, reproduire ou s'adapter à une structure rythmique régulière ?",
-      },
-      {
-        nom: "Vitesse d'exécution motrice",
-        question: "Ce jeu place-t-il le joueur sous contrainte de temps pour réaliser un geste ou une action motrice le plus rapidement possible ?",
-      },
-      {
-        nom: 'Fluidité du mouvement',
-        question: "Ce jeu valorise-t-il ou nécessite-t-il des gestes continus, fluides et bien enchaînés, sans à-coups ni interruptions ?",
-      },
-    ],
-  },
-  {
-    categorie: 'Régulation & contrôle moteur',
-    fonctions: [
-      {
-        nom: 'Inhibition motrice',
-        question: "Ce jeu demande-t-il de bloquer, retenir ou arrêter un geste ou une action motrice déjà amorcée ?",
-      },
-    ],
-  },
-  {
     categorie: 'Espace & temps',
     fonctions: [
       {
@@ -160,12 +137,24 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
         question: "Ce jeu demande-t-il d'organiser mentalement ou physiquement des éléments dans l'espace en tenant compte de leurs relations ?",
       },
       {
+        nom: 'Orientation spatiale',
+        question: "Ce jeu nécessite-t-il de se repérer dans un espace de jeu pour décider de ses déplacements ou de ses actions ?",
+      },
+      {
+        nom: 'Orientation droite/gauche',
+        question: "Ce jeu requiert-il de distinguer et d'utiliser correctement les notions de droite et de gauche, sur soi ou sur autrui ?",
+      },
+      {
         nom: 'Structuration temporelle',
         question: "Ce jeu implique-t-il de gérer des notions de durée, de succession ou de simultanéité dans le déroulement des actions ?",
       },
       {
-        nom: 'Orientation spatiale',
-        question: "Ce jeu nécessite-t-il de se repérer dans un espace de jeu pour décider de ses déplacements ou de ses actions ?",
+        nom: 'Sens du rythme',
+        question: "Ce jeu demande-t-il de percevoir, reproduire ou s'adapter à une structure rythmique régulière ?",
+      },
+      {
+        nom: "Vitesse d'exécution motrice",
+        question: "Ce jeu place-t-il le joueur sous contrainte de temps pour réaliser un geste ou une action motrice le plus rapidement possible ?",
       },
     ],
   },
