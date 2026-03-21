@@ -170,7 +170,7 @@ export const FONCTIONS_PAR_CATEGORIE: FonctionCategorie[] = [
         question: "Ce jeu exige-t-il de maintenir et de manipuler activement des informations en mémoire à court terme pendant la partie ?",
       },
       {
-        nom: 'Flexibilité cognitive',
+        nom: 'Flexibilité mentale',
         question: "Ce jeu oblige-t-il à changer de stratégie, de point de vue ou de règle en cours de partie pour s'adapter à de nouvelles situations ?",
       },
       {

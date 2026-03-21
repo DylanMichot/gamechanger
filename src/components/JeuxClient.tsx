@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Separator } from '@/components/ui/separator'
 import { GameCard } from '@/components/GameCard'
+import { TagInput } from '@/components/TagInput'
+import { FONCTIONS_PAR_CATEGORIE } from '@/lib/fonctions'
 import type { BoardGame } from '@/types'
 
 interface JeuxClientProps {
@@ -83,9 +85,6 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
     setFilters((prev) => ({ ...prev, pathologyTags: prev.pathologyTags.filter((t) => t !== tag) }))
   }
 
-  function removePsychomotorTag(tag: string) {
-    setFilters((prev) => ({ ...prev, psychomotorTags: prev.psychomotorTags.filter((t) => t !== tag) }))
-  }
 
   const hasActiveFilters =
     filters.name.trim() !== '' ||
@@ -97,6 +96,19 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
 
   const availablePathologyTags = allPathologyTags.filter((t) => !filters.pathologyTags.includes(t))
   const availablePsychomotorTags = allPsychomotorTags.filter((t) => !filters.psychomotorTags.includes(t))
+
+  const groupedPsychomotorTags = useMemo(() => {
+    const knownNoms = new Set(FONCTIONS_PAR_CATEGORIE.flatMap((c) => c.fonctions.map((f) => f.nom)))
+    const groups = FONCTIONS_PAR_CATEGORIE
+      .map((cat) => ({
+        label: cat.categorie,
+        items: cat.fonctions.map((f) => f.nom).filter((nom) => availablePsychomotorTags.includes(nom)),
+      }))
+      .filter((g) => g.items.length > 0)
+    const autres = availablePsychomotorTags.filter((t) => !knownNoms.has(t))
+    if (autres.length > 0) groups.push({ label: 'Autres', items: autres })
+    return groups
+  }, [availablePsychomotorTags])
 
   const FilterPanel = () => (
     <div className="space-y-6">
@@ -207,44 +219,15 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
         <>
           <div className="space-y-3">
             <h3 className="font-semibold text-sm text-foreground">Fonctions</h3>
-            {availablePsychomotorTags.length > 0 && (
-              <select
-                value=""
-                onChange={(e) => {
-                  if (e.target.value) {
-                    setFilters((prev) => ({
-                      ...prev,
-                      psychomotorTags: [...prev.psychomotorTags, e.target.value],
-                    }))
-                  }
-                }}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <option value="">Ajouter une fonction...</option>
-                {availablePsychomotorTags.map((tag) => (
-                  <option key={tag} value={tag}>{tag}</option>
-                ))}
-              </select>
-            )}
-            {filters.psychomotorTags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {filters.psychomotorTags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center gap-1 rounded-full bg-teal-100 text-teal-800 px-2.5 py-0.5 text-xs font-semibold"
-                  >
-                    {tag}
-                    <button
-                      onClick={() => removePsychomotorTag(tag)}
-                      className="hover:opacity-70"
-                      aria-label={`Retirer ${tag}`}
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
+            <TagInput
+              value={filters.psychomotorTags}
+              onChange={(tags) => setFilters((prev) => ({ ...prev, psychomotorTags: tags }))}
+              placeholder="Cliquer pour voir les fonctions..."
+              variant="psychomotor"
+              suggestions={allPsychomotorTags}
+              suggestionGroups={groupedPsychomotorTags}
+              showAllOnFocus={true}
+            />
           </div>
           <Separator />
         </>
