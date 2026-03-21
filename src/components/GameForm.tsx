@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { TagInput } from '@/components/TagInput'
 import { FONCTIONS_PSYCHOMOTRICES } from '@/lib/constants'
-import { FONCTIONS_DETAIL } from '@/lib/fonctions'
+import { FONCTIONS_DETAIL, FONCTIONS_PAR_CATEGORIE } from '@/lib/fonctions'
 import type { BoardGame, BoardGameFormData } from '@/types'
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024
@@ -332,6 +332,10 @@ export function GameForm({ initialData, mode, existingPathologyTags = [] }: Game
               placeholder="Cliquer pour voir les fonctions disponibles..."
               variant="psychomotor"
               suggestions={FONCTIONS_PSYCHOMOTRICES}
+              suggestionGroups={FONCTIONS_PAR_CATEGORIE.map((c) => ({
+                label: c.categorie,
+                items: c.fonctions.map((f) => f.nom),
+              }))}
               showAllOnFocus={true}
             />
             {formData.psychomotorTags.length > 0 && (
