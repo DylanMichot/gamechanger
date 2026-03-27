@@ -126,9 +126,12 @@ export function AdminGamesTable({ games, isAdmin }: Props) {
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   <div className="flex flex-wrap gap-1">
-                    {game.psychomotorTags.map((tag) => (
+                    {game.psychomotorTags.slice(0, 4).map((tag) => (
                       <Badge key={tag} variant="psychomotor" className="text-xs whitespace-nowrap">{tag}</Badge>
                     ))}
+                    {game.psychomotorTags.length > 4 && (
+                      <Badge variant="outline" className="text-xs whitespace-nowrap">+{game.psychomotorTags.length - 4}</Badge>
+                    )}
                     {game.psychomotorTags.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
                   </div>
                 </TableCell>
