@@ -90,8 +90,7 @@ export function AdminGamesTable({ games, isAdmin }: Props) {
           <TableRow className="bg-muted/30">
             <TableHead className="w-16">Image</TableHead>
             <TableHead>Nom</TableHead>
-            <TableHead className="hidden md:table-cell">Fonctions</TableHead>
-            <TableHead className="hidden md:table-cell">Populations</TableHead>
+            <TableHead className="hidden md:table-cell w-[320px]">Fonctions</TableHead>
             <TableHead className="hidden sm:table-cell">Âge</TableHead>
             <TableHead className="hidden sm:table-cell">Joueurs</TableHead>
             <TableHead className="w-24 text-right">Actions</TableHead>
@@ -100,7 +99,7 @@ export function AdminGamesTable({ games, isAdmin }: Props) {
         <TableBody>
           {filtered.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-10 text-muted-foreground text-sm">
+              <TableCell colSpan={6} className="text-center py-10 text-muted-foreground text-sm">
                 Aucun jeu ne correspond à "{search}"
               </TableCell>
             </TableRow>
@@ -126,25 +125,11 @@ export function AdminGamesTable({ games, isAdmin }: Props) {
                   )}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  <div className="flex flex-wrap gap-1 max-w-[200px]">
-                    {game.psychomotorTags.slice(0, 2).map((tag) => (
-                      <Badge key={tag} variant="psychomotor" className="text-xs">{tag}</Badge>
+                  <div className="flex flex-wrap gap-1">
+                    {game.psychomotorTags.map((tag) => (
+                      <Badge key={tag} variant="psychomotor" className="text-xs whitespace-nowrap">{tag}</Badge>
                     ))}
-                    {game.psychomotorTags.length > 2 && (
-                      <Badge variant="outline" className="text-xs">+{game.psychomotorTags.length - 2}</Badge>
-                    )}
                     {game.psychomotorTags.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
-                  </div>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  <div className="flex flex-wrap gap-1 max-w-[200px]">
-                    {game.pathologyTags.slice(0, 3).map((tag) => (
-                      <Badge key={tag} variant="pathology" className="text-xs">{tag}</Badge>
-                    ))}
-                    {game.pathologyTags.length > 3 && (
-                      <Badge variant="outline" className="text-xs">+{game.pathologyTags.length - 3}</Badge>
-                    )}
-                    {game.pathologyTags.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
                   </div>
                 </TableCell>
                 <TableCell className="hidden sm:table-cell text-sm text-muted-foreground whitespace-nowrap">

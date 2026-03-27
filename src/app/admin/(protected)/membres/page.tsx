@@ -98,7 +98,7 @@ export default function MembresPage() {
         <Input
           value={newName}
           onChange={(e) => { setNewName(e.target.value); setError('') }}
-          placeholder="Prénom N (ex : Antoine S)"
+          placeholder="Prénom N (ex : Sarah A)"
           className="flex-1"
         />
         <Button type="submit" disabled={adding || !newName.trim()} className="gap-2 shrink-0">

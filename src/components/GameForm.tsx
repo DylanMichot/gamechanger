@@ -341,7 +341,7 @@ export function GameForm({ initialData, mode, existingPathologyTags = [] }: Game
             <TagInput
               value={formData.pathologyTags}
               onChange={(tags) => setFormData((p) => ({ ...p, pathologyTags: tags }))}
-              placeholder="Ex : personnes âgées, TDAH, enfants..."
+              placeholder="Ex : personnes âgées, TDAH..."
               variant="pathology"
               suggestions={existingPathologyTags}
             />
