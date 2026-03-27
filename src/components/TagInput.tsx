@@ -4,6 +4,11 @@ import { useState, KeyboardEvent, useRef, useEffect, useMemo } from 'react'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+export interface SuggestionGroup {
+  label: string
+  items: string[]
+}
+
 interface TagInputProps {
   value: string[]
   onChange: (tags: string[]) => void
@@ -11,6 +16,7 @@ interface TagInputProps {
   className?: string
   variant?: 'pathology' | 'psychomotor'
   suggestions?: string[]
+  suggestionGroups?: SuggestionGroup[]
   showAllOnFocus?: boolean
 }
 
@@ -21,12 +27,16 @@ export function TagInput({
   className,
   variant = 'pathology',
   suggestions = [],
+  suggestionGroups,
   showAllOnFocus = false,
 }: TagInputProps) {
   const [inputValue, setInputValue] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // Flat filtered suggestions (used when no groups)
   const filteredSuggestions = useMemo(() => {
     const available = suggestions.filter((s) => !value.includes(s))
     if (!inputValue.trim()) {
@@ -35,6 +45,26 @@ export function TagInput({
     const lower = inputValue.toLowerCase()
     return available.filter((s) => s.toLowerCase().includes(lower)).slice(0, 8)
   }, [inputValue, suggestions, value, showAllOnFocus])
+
+  // Grouped filtered suggestions
+  const filteredGroups = useMemo(() => {
+    if (!suggestionGroups) return null
+    const lower = inputValue.toLowerCase()
+    return suggestionGroups
+      .map((group) => ({
+        label: group.label,
+        items: group.items.filter(
+          (s) =>
+            !value.includes(s) &&
+            (!inputValue.trim() || s.toLowerCase().includes(lower))
+        ),
+      }))
+      .filter((g) => g.items.length > 0)
+  }, [inputValue, suggestionGroups, value])
+
+  const hasVisibleSuggestions = suggestionGroups
+    ? (filteredGroups?.length ?? 0) > 0
+    : filteredSuggestions.length > 0
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -47,12 +77,17 @@ export function TagInput({
   }, [])
 
   function addTag(tag: string) {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current)
+      closeTimeout.current = null
+    }
     const trimmed = tag.trim()
     if (trimmed && !value.includes(trimmed)) {
       onChange([...value, trimmed])
     }
     setInputValue('')
-    setShowSuggestions(false)
+    setShowSuggestions(true)
+    inputRef.current?.focus()
   }
 
   function removeTag(tag: string) {
@@ -62,8 +97,11 @@ export function TagInput({
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       e.preventDefault()
-      if (filteredSuggestions.length > 0 && inputValue) {
-        addTag(filteredSuggestions[0])
+      const firstSuggestion = filteredGroups
+        ? filteredGroups[0]?.items[0]
+        : filteredSuggestions[0]
+      if (firstSuggestion && inputValue) {
+        addTag(firstSuggestion)
       } else if (!showAllOnFocus) {
         addTag(inputValue)
       }
@@ -102,6 +140,7 @@ export function TagInput({
         ))}
         {!allSelected && (
           <input
+            ref={inputRef}
             type="text"
             value={inputValue}
             onChange={(e) => {
@@ -109,9 +148,15 @@ export function TagInput({
               setShowSuggestions(true)
             }}
             onKeyDown={handleKeyDown}
-            onFocus={() => setShowSuggestions(true)}
+            onFocus={() => {
+              if (closeTimeout.current) {
+                clearTimeout(closeTimeout.current)
+                closeTimeout.current = null
+              }
+              setShowSuggestions(true)
+            }}
             onBlur={() => {
-              setTimeout(() => setShowSuggestions(false), 150)
+              closeTimeout.current = setTimeout(() => setShowSuggestions(false), 150)
               if (inputValue.trim() && !showAllOnFocus) addTag(inputValue)
             }}
             placeholder={value.length === 0 ? placeholder : ''}
@@ -121,21 +166,42 @@ export function TagInput({
       </div>
 
       {/* Dropdown suggestions */}
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <div className="absolute left-0 right-0 z-10 mt-1 bg-white border border-border rounded-md shadow-md overflow-hidden max-h-52 overflow-y-auto">
-          {filteredSuggestions.map((suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              onMouseDown={(e) => {
-                e.preventDefault()
-                addTag(suggestion)
-              }}
-              className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors"
-            >
-              {suggestion}
-            </button>
-          ))}
+      {showSuggestions && hasVisibleSuggestions && (
+        <div className="absolute left-0 right-0 z-10 mt-1 bg-white border border-border rounded-md shadow-md overflow-hidden max-h-64 overflow-y-auto">
+          {filteredGroups
+            ? filteredGroups.map((group) => (
+                <div key={group.label}>
+                  <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground bg-muted border-b border-border">
+                    {group.label}
+                  </div>
+                  {group.items.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        addTag(item)
+                      }}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors"
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              ))
+            : filteredSuggestions.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    addTag(suggestion)
+                  }}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors"
+                >
+                  {suggestion}
+                </button>
+              ))}
         </div>
       )}
 
@@ -146,11 +212,11 @@ export function TagInput({
           pour ajouter un tag
         </p>
       )}
-      {showAllOnFocus && (
+      {/* {showAllOnFocus && (
         <p className="text-xs text-muted-foreground">
           Cliquez sur le champ pour voir les options disponibles
         </p>
-      )}
+      )} */}
     </div>
   )
 }
