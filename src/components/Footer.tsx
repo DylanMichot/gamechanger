@@ -8,7 +8,7 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Dices className="h-4 w-4" />
-            <strong className="text-foreground">GameChanger</strong>
+            <strong className="text-foreground">Déjouer</strong>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <Link

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Search, Star, NotebookPen, BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { TypewriterHero } from '@/components/TypewriterHero'
 
 export default function HomePage() {
   return (
@@ -15,16 +16,7 @@ export default function HomePage() {
 
         <div className="container relative py-24 sm:py-32">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium mb-8">
-              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-              Un projet étudiant au service des professionnels
-            </div>
-
-            <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight mb-6">
-              Le bon jeu,{' '}
-              <span className="text-accent">au bon moment</span>,<br />
-              pour chaque séance.
-            </h1>
+            <TypewriterHero />
 
             <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl leading-relaxed">
               Un outil créé par des étudiants en psychomotricité pour explorer
