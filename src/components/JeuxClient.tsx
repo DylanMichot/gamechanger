@@ -95,20 +95,19 @@ export function JeuxClient({ games, allPathologyTags, allPsychomotorTags }: Jeux
     filters.psychomotorTags.length > 0
 
   // const availablePathologyTags = allPathologyTags.filter((t) => !filters.pathologyTags.includes(t))
-  const availablePsychomotorTags = allPsychomotorTags.filter((t) => !filters.psychomotorTags.includes(t))
 
   const groupedPsychomotorTags = useMemo(() => {
     const knownNoms = new Set(FONCTIONS_PAR_CATEGORIE.flatMap((c) => c.fonctions.map((f) => f.nom)))
     const groups = FONCTIONS_PAR_CATEGORIE
       .map((cat) => ({
         label: cat.categorie,
-        items: cat.fonctions.map((f) => f.nom).filter((nom) => availablePsychomotorTags.includes(nom)),
+        items: cat.fonctions.map((f) => f.nom).filter((nom) => allPsychomotorTags.includes(nom)),
       }))
       .filter((g) => g.items.length > 0)
-    const autres = availablePsychomotorTags.filter((t) => !knownNoms.has(t))
+    const autres = allPsychomotorTags.filter((t) => !knownNoms.has(t))
     if (autres.length > 0) groups.push({ label: 'Autres', items: autres })
     return groups
-  }, [availablePsychomotorTags])
+  }, [allPsychomotorTags])
 
   const FilterPanel = () => (
     <div className="space-y-6">

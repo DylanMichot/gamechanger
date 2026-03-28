@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, KeyboardEvent, useRef, useEffect, useMemo } from 'react'
-import { X } from 'lucide-react'
+import { X, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export interface SuggestionGroup {
@@ -32,21 +32,21 @@ export function TagInput({
 }: TagInputProps) {
   const [inputValue, setInputValue] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [dropUp, setDropUp] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Flat filtered suggestions (used when no groups)
+  // Flat suggestions — includes selected items (shown with checkmark)
   const filteredSuggestions = useMemo(() => {
-    const available = suggestions.filter((s) => !value.includes(s))
     if (!inputValue.trim()) {
-      return showAllOnFocus ? available : []
+      return showAllOnFocus ? suggestions : []
     }
     const lower = inputValue.toLowerCase()
-    return available.filter((s) => s.toLowerCase().includes(lower)).slice(0, 8)
-  }, [inputValue, suggestions, value, showAllOnFocus])
+    return suggestions.filter((s) => s.toLowerCase().includes(lower)).slice(0, 8)
+  }, [inputValue, suggestions, showAllOnFocus])
 
-  // Grouped filtered suggestions
+  // Grouped suggestions — includes selected items (shown with checkmark)
   const filteredGroups = useMemo(() => {
     if (!suggestionGroups) return null
     const lower = inputValue.toLowerCase()
@@ -54,13 +54,11 @@ export function TagInput({
       .map((group) => ({
         label: group.label,
         items: group.items.filter(
-          (s) =>
-            !value.includes(s) &&
-            (!inputValue.trim() || s.toLowerCase().includes(lower))
+          (s) => !inputValue.trim() || s.toLowerCase().includes(lower)
         ),
       }))
       .filter((g) => g.items.length > 0)
-  }, [inputValue, suggestionGroups, value])
+  }, [inputValue, suggestionGroups])
 
   const hasVisibleSuggestions = suggestionGroups
     ? (filteredGroups?.length ?? 0) > 0
@@ -76,13 +74,25 @@ export function TagInput({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  function addTag(tag: string) {
+  // Flip upward if there isn't enough space below (dropdown height ~256px + margin)
+  useEffect(() => {
+    if (showSuggestions && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - rect.bottom
+      setDropUp(spaceBelow < 280)
+    }
+  }, [showSuggestions])
+
+  function toggleTag(tag: string) {
     if (closeTimeout.current) {
       clearTimeout(closeTimeout.current)
       closeTimeout.current = null
     }
     const trimmed = tag.trim()
-    if (trimmed && !value.includes(trimmed)) {
+    if (!trimmed) return
+    if (value.includes(trimmed)) {
+      onChange(value.filter((t) => t !== trimmed))
+    } else {
       onChange([...value, trimmed])
     }
     setInputValue('')
@@ -101,9 +111,9 @@ export function TagInput({
         ? filteredGroups[0]?.items[0]
         : filteredSuggestions[0]
       if (firstSuggestion && inputValue) {
-        addTag(firstSuggestion)
+        toggleTag(firstSuggestion)
       } else if (!showAllOnFocus) {
-        addTag(inputValue)
+        toggleTag(inputValue)
       }
     } else if (e.key === 'Backspace' && !inputValue && value.length > 0) {
       removeTag(value[value.length - 1])
@@ -113,6 +123,14 @@ export function TagInput({
   }
 
   const allSelected = showAllOnFocus && suggestions.length > 0 && suggestions.every((s) => value.includes(s))
+
+  const selectedStyle = variant === 'pathology'
+    ? 'bg-blue-50 text-blue-800 font-semibold'
+    : 'bg-teal-50 text-teal-800 font-semibold'
+
+  const checkStyle = variant === 'pathology'
+    ? 'text-blue-500'
+    : 'text-teal-500'
 
   return (
     <div className={cn('relative space-y-2', className)} ref={containerRef}>
@@ -157,7 +175,7 @@ export function TagInput({
             }}
             onBlur={() => {
               closeTimeout.current = setTimeout(() => setShowSuggestions(false), 150)
-              if (inputValue.trim() && !showAllOnFocus) addTag(inputValue)
+              if (inputValue.trim() && !showAllOnFocus) toggleTag(inputValue)
             }}
             placeholder={value.length === 0 ? placeholder : ''}
             className="flex-1 min-w-[120px] bg-transparent outline-none text-sm placeholder:text-muted-foreground"
@@ -167,41 +185,58 @@ export function TagInput({
 
       {/* Dropdown suggestions */}
       {showSuggestions && hasVisibleSuggestions && (
-        <div className="absolute left-0 right-0 z-10 mt-1 bg-white border border-border rounded-md shadow-md overflow-hidden max-h-64 overflow-y-auto">
+        <div className={cn(
+          'absolute left-0 right-0 z-10 bg-white border border-border rounded-md shadow-md overflow-hidden max-h-64 overflow-y-auto',
+          dropUp ? 'bottom-full mb-1' : 'mt-1'
+        )}>
           {filteredGroups
             ? filteredGroups.map((group) => (
                 <div key={group.label}>
                   <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground bg-muted border-b border-border">
                     {group.label}
                   </div>
-                  {group.items.map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault()
-                        addTag(item)
-                      }}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors"
-                    >
-                      {item}
-                    </button>
-                  ))}
+                  {group.items.map((item) => {
+                    const selected = value.includes(item)
+                    return (
+                      <button
+                        key={item}
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault()
+                          toggleTag(item)
+                        }}
+                        className={cn(
+                          'w-full text-left px-3 py-2 text-sm flex items-center justify-between gap-2 transition-colors',
+                          selected ? selectedStyle : 'hover:bg-muted'
+                        )}
+                      >
+                        <span>{item}</span>
+                        {selected && <Check className={cn('h-3.5 w-3.5 shrink-0', checkStyle)} />}
+                      </button>
+                    )
+                  })}
                 </div>
               ))
-            : filteredSuggestions.map((suggestion) => (
-                <button
-                  key={suggestion}
-                  type="button"
-                  onMouseDown={(e) => {
-                    e.preventDefault()
-                    addTag(suggestion)
-                  }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors"
-                >
-                  {suggestion}
-                </button>
-              ))}
+            : filteredSuggestions.map((suggestion) => {
+                const selected = value.includes(suggestion)
+                return (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      toggleTag(suggestion)
+                    }}
+                    className={cn(
+                      'w-full text-left px-3 py-2 text-sm flex items-center justify-between gap-2 transition-colors',
+                      selected ? selectedStyle : 'hover:bg-muted'
+                    )}
+                  >
+                    <span>{suggestion}</span>
+                    {selected && <Check className={cn('h-3.5 w-3.5 shrink-0', checkStyle)} />}
+                  </button>
+                )
+              })}
         </div>
       )}
 
@@ -212,11 +247,6 @@ export function TagInput({
           pour ajouter un tag
         </p>
       )}
-      {/* {showAllOnFocus && (
-        <p className="text-xs text-muted-foreground">
-          Cliquez sur le champ pour voir les options disponibles
-        </p>
-      )} */}
     </div>
   )
 }
